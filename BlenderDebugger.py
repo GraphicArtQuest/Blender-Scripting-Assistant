@@ -26,7 +26,7 @@ bl_info = {
    "description": "Starts debugging server for VS Code.",
    'location': 'In search (Edit > Operator Search) type "Debug"',
    "warning": "",
-   "wiki_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode",
+   "doc_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode",
    "tracker_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode/issues",
    'category': 'Development',
 }
