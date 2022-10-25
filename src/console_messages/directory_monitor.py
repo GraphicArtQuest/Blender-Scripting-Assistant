@@ -25,7 +25,7 @@ class DirectoryMonitorMessages:
         print(color.CONTROL + "Monitoring is secured." + color.ENDC)
     
     def monitoring_active():
-        print('Monitoring is already active. Continuing to monitor...')
+        print(color.CONTROL + "Monitoring is already active." + color.ENDC + " Continuing to monitor...")
     
     def invalid_directory(directory):
         print(_DirectoryMonitor_ErrorHeader() + "'DirectoryMonitor.directory' is invalid. Unable to monitor until "

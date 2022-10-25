@@ -201,7 +201,15 @@ class TestDirectoryMonitor(unittest.TestCase):
         self.assertTrue(monitor.active)
         monitor.secure()
         self.assertFalse(monitor.active)
-
+    
+    def test_continue_running_when_told_to_watch_while_already_watching(self):
+        monitor.directory = good_folder_path
+        self.assertFalse(monitor.active)
+        monitor.watch()
+        monitor.watch()
+        self.assertTrue(monitor.active)
+        monitor.secure()
+        self.assertFalse(monitor.active)
     
     def test_watch_when_directory_manually_changed_to_bad(self):
         # If someone manually changes monitor._directory to a bad value before watching, it should not run.
