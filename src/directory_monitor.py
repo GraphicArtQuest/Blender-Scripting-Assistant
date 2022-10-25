@@ -3,6 +3,8 @@ from collections import defaultdict
 import os
 import threading
 
+from src.console_messages.directory_monitor import DirectoryMonitorMessages as message
+
 class DirectoryMonitor(object):
 # This class monitors a specified file or folder for any changes.
 #
@@ -32,12 +34,11 @@ class DirectoryMonitor(object):
             check_polling_delay = float(new_delay)
             
         except:
-            print("DirectoryMonitor error: 'DirectoryMonitor.polling_delay' must be a number. Maintaining current value of:\n    " 
-            + str(self._polling_delay) + " seconds.")
+            message.invalid_polling_delay(self.polling_delay)
             return
 
         if check_polling_delay <= 0:
-            print("DirectoryMonitor error: 'DirectoryMonitor.polling_delay' must be more than 0.")
+            message.invalid_polling_delay(self.polling_delay)
             return
         
         self._polling_delay = check_polling_delay
@@ -54,9 +55,7 @@ class DirectoryMonitor(object):
             self._directory = str(desired_directory)
             self._last_tracked_filecount = self._num_files(self._directory)
         else:
-            print("DirectoryMonitor error: 'DirectoryMonitor.directory' must be a file or folder that exists.\n    You tried: "
-                + str(desired_directory) + "\n    Maintaining current directory at: '" 
-                + self._directory + "'")
+            message.unable_to_change_directory(desired_directory, self.directory)
     
     polling_delay = property(get_polling_delay, set_polling_delay)
     active = property(get_active)   # Read only. Turn on with 'watch()'
@@ -71,7 +70,7 @@ class DirectoryMonitor(object):
         try:
             del self._subscribers[script]
         except:
-            print("DirectoryMonitor error: Unable to unsubscribe '" + script + "'. This script was never registered.")
+            message.unable_to_unsubscribe(script)
 
     def clear_subscribers(self):
         self._subscribers.clear()
@@ -90,7 +89,7 @@ class DirectoryMonitor(object):
 
         if file_update_time > self._last_tracked_update:    # Only file changes (not folders) can trigger updates
             if self.active: # Only print after initialized and active
-                print('DirectoryMonitor found an updated file: ' + os.path.basename(file_path))
+                message.found_updated_file(file_path)
         else:
             return 0
         
@@ -121,9 +120,9 @@ class DirectoryMonitor(object):
         latest_update = 0
 
         if not os.path.exists(str(file_or_folder_path)):
-            print("DirectoryMonitor error: The specified file or folder path does not exist.")
+            message.file_or_folder_does_not_exist(file_or_folder_path)
             self.secure()
-            return None
+            return
 
         if os.path.isfile(file_or_folder_path):
             latest_update = self._isNewerFileUpdate(file_or_folder_path)
@@ -137,7 +136,7 @@ class DirectoryMonitor(object):
             return
     
         if original_filecount > self._last_tracked_filecount:
-            print('DirectoryMonitor found ' + str(original_filecount - self._last_tracked_filecount) + " file(s) deleted.")
+            message.found_deleted_files(original_filecount - self._last_tracked_filecount)
             self.run_scripts()
             return
 
@@ -149,24 +148,23 @@ class DirectoryMonitor(object):
     
     def watch(self):
         if not os.path.exists(str(self.directory)):
-            print("DirectoryMonitor error: 'DirectoryMonitor.directory' is invalid. Unable to monitor until provided valid directory file or folder."
-                + "\n    Current bad directory: " + str(self._directory))
+            message.invalid_directory(self._directory)
             self.secure()
             return
         
         if self.active:
             # Without this guard clause, we could cause additional timers to start and take system resources
-            print('Monitoring is already active. Continuing to monitor...')
+            message.monitoring_active()
             return
         
         # Hasn't been run yet. Initialize and commence monitoring
         self._poll()
-        print('Watching for updates...')
+        message.watch()
     
     def secure(self):
         self._poll_timer.cancel()
         self._last_tracked_update = 0
-        print('Monitoring is secured.')
+        message.secure()
         
 
 monitor = DirectoryMonitor()
