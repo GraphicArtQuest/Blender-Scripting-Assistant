@@ -22,11 +22,11 @@ bl_info = {
    'name': 'Debugger for VS Code',
    'author': 'Alan North',
    'version': (2, 2, 0),
-   'blender': (2, 80, 0), # supports 2.8+
+   'blender': (2, 83, 0),
    "description": "Starts debugging server for VS Code.",
    'location': 'In search (Edit > Operator Search) type "Debug"',
    "warning": "",
-   "wiki_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode",
+   "doc_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode",
    "tracker_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode/issues",
    'category': 'Development',
 }
