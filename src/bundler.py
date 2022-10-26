@@ -118,7 +118,13 @@ def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bo
         os.remove(final_bundle_path)
     
     temp_dir = tempfile.TemporaryDirectory()
-    copy_files_to_working_directory(source_files, temp_dir.name)
+    copy_files_to_working_directory(source_files, os.path.join(temp_dir.name, safe_name))
+        # In order for Blender to load the add-on, the bundled files all have to be in a single folder within a .zip
+        #   archive. On installation, Blender extracts the folder to a place such as:
+        #       "C:\Users\[name]\AppData\Roaming\Blender Foundation\Blender\3.3\scripts\addons"
+        #   Thus, the folder "[safe_name]" will get added to this add-on location. Otherwise, it just dumps all of the
+        #   individual files in there and Blender can't figure out what to do with it.
+
     shutil.make_archive(temp_dir.name, 'zip', temp_dir.name) # Creates a .zip in the same location as the working folder
 
     temp_zippath = temp_dir.name + ".zip"
