@@ -9,7 +9,7 @@ import os
 import shutil
 import tempfile
 
-from src.console_messages.bundler import BundlerMessages as message
+from .console_messages.bundler import BundlerMessages as message
 
 def isValidBlenderAddonPath(path: str) -> bool:
     """Determine if a file path is a valid candidate for a Blender add-on.

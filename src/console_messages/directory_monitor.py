@@ -4,7 +4,7 @@ This module provides defines all the console output messages for the DirectoryMo
 This makes the code in src/directory_monitor.py easier to read and maintain. 
 """
 
-from src.console_messages.color_control import color
+from .color_control import color
 
 def _DirectoryMonitor_ErrorHeader():
     # I split this into a function outside of the class because otherwise in order to use

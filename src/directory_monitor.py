@@ -3,7 +3,7 @@ from collections import defaultdict
 import os
 import threading
 
-from src.console_messages.directory_monitor import DirectoryMonitorMessages as message
+from .console_messages.directory_monitor import DirectoryMonitorMessages as message
 
 class DirectoryMonitor(object):
 # This class monitors a specified file or folder for any changes.

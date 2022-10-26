@@ -1,6 +1,6 @@
 """ Output messages to the console for the bundling functions."""
 
-from src.console_messages.color_control import color
+from .color_control import color
 
 def _Bundler_ErrorHeader():
     # I split this into a function outside of the class because otherwise in order to use
