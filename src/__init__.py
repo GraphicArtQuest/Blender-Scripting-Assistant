@@ -20,13 +20,13 @@ Created by Alan North
 
 bl_info = {
    'name': 'Debugger for VS Code',
-   'author': 'Alan North',
+   'author': 'Alan North, M. Scott Lassiter',
    'version': (2, 2, 0),
-   'blender': (2, 83, 0),
+   'blender': (3, 3, 0), # Haven't verified on anything lower than 3.3
    "description": "Starts debugging server for VS Code.",
    'location': 'In search (Edit > Operator Search) type "Debug"',
    "warning": "",
-   "doc_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode",
+   "doc_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode", 
    "tracker_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode/issues",
    'category': 'Development',
 }
@@ -38,6 +38,10 @@ import sys
 
 import bpy
 
+from .bundler import bundle
+from .directory_monitor import monitor
+
+last_Tracked_Update = 0
 
 # finds path to debugpy if it exists
 def check_for_debugpy():
@@ -125,10 +129,21 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
       max=65535,
       default=5678
    )
+
+   debugpath: bpy.props.StringProperty(
+      name="File or Folder to Debug",
+      subtype="FILE_PATH"
+   )
+
+   watch_For_Updates: bpy.props.BoolProperty(
+      name="Watch for Updates",
+      default=False
+   )
+
    def draw(self, context):
       layout = self.layout
       row_path = layout
-      row_path.label(text="The addon will try to auto-find the location of debugpy, if no path is found, or you would like to use a different path, set it here.")
+      row_path.label(text="The addon will try to auto-find the location of debugpy. If no path is found or you would like to use a different path, set it here.")
       row_path.prop(self, "path")
 
       row_timeout = layout.split()
@@ -138,6 +153,10 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
       row_port = layout.split()
       row_port.prop(self, "port")
       row_port.label(text="Port to use. Should match port in VS Code's launch.json.")
+
+      row_debug = layout.box()
+      row_debug.prop(self, "debugpath")
+      row_debug.prop(self, "watch_For_Updates")
 
 
 # check if debugger has attached
@@ -151,6 +170,36 @@ def check_done(i, modal_limit, prefs):
       return {"PASS_THROUGH"}
    print('Debugger is Attached')
    return {"FINISHED"}
+
+class DebuggerPanel(bpy.types.Panel):
+   """This is a Tooltip"""
+   bl_label = "Debugger"
+   bl_idname = "OBJECT_PT_DebugPanel"
+   bl_space_type = 'VIEW_3D'
+   bl_region_type = 'UI'
+   bl_category = 'Debugger'
+
+
+   def draw(self, context):
+      layout = self.layout
+      # row=box.row()
+      row = layout.box()
+      row.label(text="Port to use. Should match port in VS Code's launch.json.")
+      row.operator(DebugServerStart.bl_idname, text="Start Debug Server", icon="SCRIPT")
+      # row = layout.box()
+      # portText = "Port: %p" % bpy.context.preferences.addons['BlenderDebugger'].preferences.port
+      portText = str(bpy.context.preferences.addons['BlenderDebugger'].preferences.port)
+      row = layout.row()
+      row.label(text=portText)
+      row.label(text=str(bpy.context.preferences.addons['BlenderDebugger'].preferences.debugpath))
+      row = layout.row()
+      # row.prop(context.scene, 'add_version')
+      # row.prop(context.scene, 'debugFolderPath')
+      # row.prop(context.scene, 'debug_Path')
+      row = layout.row()
+      row.prop(context.scene, 'watch_For_Updates')
+
+      # row_port.prop(self, "port")
 
 class DebuggerCheck(bpy.types.Operator):
    bl_idname = "debug.check_for_debugger"
@@ -228,19 +277,56 @@ class DebugServerStart(bpy.types.Operator):
       return {"FINISHED"}
 
 classes = (
+   DebuggerPanel,
    DebuggerPreferences,
    DebuggerCheck,
    DebugServerStart,
 )
 
+
+
+# def update_watch_For_Updates(self, context):
+# # Runs when the "Watch for Updates" checkbox changes
+
+#    bpy.context.preferences.addons['BlenderDebugger'].preferences.watch_For_Updates = self.watch_For_Updates
+
+#    if self.watch_For_Updates:
+#       print ('Commenced polling for updates to the debug folder.')
+#       start_Polling_For_Updates()
+#    else:
+#       # bpy.context.preferences.addons['BlenderDebugger'].preferences.watch_For_Updates = False
+#       # You have to stop this timer when turning off update polling, or else
+#       #     you just accumulate more and more timers until you close Blender.
+#       pollTimer.cancel()
+#       print ('Secured from polling for updates.')
+
+# def update_Debug_Path(self, context):
+# # Runs when the "File or Folder to Debug" changes
+
+#    print('Watch for updates: ' + str(self.watch_For_Updates))
+#    print(self.debug_Path)
+#    bpy.context.preferences.addons['BlenderDebugger'].preferences.debugpath = self.debug_Path
+
+
 def register():
    for cls in classes:
       bpy.utils.register_class(cls)
-
+   bpy.types.Scene.debug_Path = bpy.props.StringProperty(
+         name="Folder to Debug",
+         subtype="FILE_PATH",
+         # update=update_Debug_Path
+      )
+   bpy.types.Scene.watch_For_Updates = bpy.props.BoolProperty(
+         name='Watch for Updates',
+         default=False,
+         # update=update_watch_For_Updates
+      )
 
 def unregister(): 
    for cls in classes:
       bpy.utils.unregister_class(cls)
+   del bpy.types.Scene.debug_Path
+   del bpy.types.Scene.watch_For_Updates
 
 if __name__ == "__main__":
    register()
