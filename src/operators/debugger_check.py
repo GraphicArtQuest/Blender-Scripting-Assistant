@@ -3,7 +3,7 @@ import bpy
 from ..debug_server import check_done
 
 class DebuggerCheck(bpy.types.Operator):
-   bl_idname = "debug.check_for_debugger"
+   bl_idname = "debugger.check_for_debugger"
    bl_label = "Debug: Check if VS Code is Attached"
    bl_description = "Starts modal timer that checks if debugger attached until attached or until timeout"
 

@@ -5,7 +5,7 @@ import sys
 import bpy
 
 class DebugServerStart(bpy.types.Operator):
-   bl_idname = "debug.connect_debugger_vscode"
+   bl_idname = "debugger.connect_debugger_vscode"
    bl_label = "Debug: Start Debug Server for VS Code"
    bl_description = "Starts debugpy server for debugger to attach to"
 
