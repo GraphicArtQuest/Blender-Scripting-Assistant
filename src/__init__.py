@@ -39,9 +39,9 @@ from .ui import DebuggerPanel, DebugServerPanel
 
 # from .bundler import bundle
 # from .directory_monitor import monitor
-from .debug_server import DebuggerCheck
 from .debug_server import DebugServerStart
 from .operators.toggle_blender_terminal import ToggleBlenderTerminal
+from .operators.debugger_check import DebuggerCheck
 
 classes = (
    DebuggerPanel,
