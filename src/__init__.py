@@ -31,7 +31,6 @@ bl_info = {
    'category': 'Development',
 }
 
-
 import bpy
 
 from .preferences import DebuggerPreferences
@@ -43,7 +42,7 @@ from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 from .operators.debugger_check import DebuggerCheck
 from .operators.debug_server_start import DebugServerStart
 
-classes = (
+debugger_classes = (
    DebuggerPanel,
    DebugServerPanel,
    DebuggerPreferences,
@@ -52,50 +51,13 @@ classes = (
    ToggleBlenderTerminal
 )
 
-
-
-# def update_watch_For_Updates(self, context):
-# # Runs when the "Watch for Updates" checkbox changes
-
-#    bpy.context.preferences.addons['BlenderDebugger'].preferences.watch_For_Updates = self.watch_For_Updates
-
-#    if self.watch_For_Updates:
-#       print ('Commenced polling for updates to the debug folder.')
-#       start_Polling_For_Updates()
-#    else:
-#       # bpy.context.preferences.addons['BlenderDebugger'].preferences.watch_For_Updates = False
-#       # You have to stop this timer when turning off update polling, or else
-#       #     you just accumulate more and more timers until you close Blender.
-#       pollTimer.cancel()
-#       print ('Secured from polling for updates.')
-
-# def update_Debug_Path(self, context):
-# # Runs when the "File or Folder to Debug" changes
-
-#    print('Watch for updates: ' + str(self.watch_For_Updates))
-#    print(self.debug_Path)
-#    bpy.context.preferences.addons['BlenderDebugger'].preferences.debugpath = self.debug_Path
-
-
 def register():
-   for cls in classes:
+   for cls in debugger_classes:
       bpy.utils.register_class(cls)
-   # bpy.types.Scene.debug_Path = bpy.props.StringProperty(
-   #       name="Folder to Debug",
-   #       subtype="FILE_PATH",
-   #       # update=update_Debug_Path
-   #    )
-   bpy.types.Scene.watch_For_Updates = bpy.props.BoolProperty(
-         name='Watch for Updates',
-         default=False,
-         # update=update_watch_For_Updates
-      )
 
 def unregister(): 
-   for cls in classes:
+   for cls in debugger_classes:
       bpy.utils.unregister_class(cls)
-   # del bpy.types.Scene.debug_Path
-   del bpy.types.Scene.watch_For_Updates
 
 if __name__ == "__main__":
    register()
