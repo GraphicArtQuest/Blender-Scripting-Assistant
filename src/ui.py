@@ -68,7 +68,7 @@ class DebugServerPanel(bpy.types.Panel):
         row = layout.row()
         row.label(text="Port to use. Should match port in VS Code's launch.json.")
         portText = str(bpy.context.preferences.addons[__package__].preferences.port)
-        row.operator('debug.connect_debugger_vscode', text="Start Debug Server", icon="SCRIPT")
+        row.operator('debugger.connect_debugger_vscode', text="Start Debug Server", icon="SCRIPT")
         row.label(text=portText)
         row = layout.row()
         # row.prop(bpy.context.preferences.addons[__package__].preferences.port)
