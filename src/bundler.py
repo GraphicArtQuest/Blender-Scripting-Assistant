@@ -5,6 +5,7 @@ Add-ons consisting of multiple files must be packaged in a .zip archive and cont
 If the add-on is a single file, it cannot be named __init__.py or else it will not load correctly.
 """
 from distutils.dir_util import copy_tree
+from pathlib import Path
 import os
 import shutil
 import tempfile
@@ -28,7 +29,7 @@ def isValidBlenderAddonPath(path: str) -> bool:
 
     return False
 
-def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bool=True) -> str:
+def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bool=True, no_pyCache: bool=True) -> str:
     """Bundles source files into a .zip archive importable by Blender. Returns the output filepath. If it encounters an
     error it returns None.
 
@@ -42,6 +43,9 @@ def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bo
 
     `overwrite`: If set to `True`, this script overwrites the output .zip archive if it already exists. If `False`, it
         will halt the operation without making any changes.
+    
+    `no_pyCache`: If set to `True`, the bundler will omit any .pyc files or __pycache__ folders from inclusion in the
+        .zip archive.
     """
     safe_name = str(name)   # Safely format the name in case something other than a string passed
 
@@ -79,6 +83,16 @@ def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bo
                 shutil.copy2(src_file, working_dir)
             else:
                 copy_tree(src_file, working_dir)
+    
+    def remove_pycache(working_dir: str) -> None:
+        """Eliminate all .pyc files and __pycache__ folders before bundling"""
+
+        # Must remove files and folders using different methods. 
+        for pyc in Path(working_dir).rglob('*.pyc'):
+            os.remove(os.path.abspath(pyc))
+        for pycache in Path(working_dir).rglob('__pycache__'):
+            shutil.rmtree(os.path.abspath(pycache))
+            
 
     ###############################################################
     # BEGIN GUARD CLAUSES
@@ -118,12 +132,15 @@ def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bo
         os.remove(final_bundle_path)
     
     temp_dir = tempfile.TemporaryDirectory()
-    copy_files_to_working_directory(source_files, os.path.join(temp_dir.name, safe_name))
+    working_dir = os.path.join(temp_dir.name, safe_name)
+    copy_files_to_working_directory(source_files, working_dir)
         # In order for Blender to load the add-on, the bundled files all have to be in a single folder within a .zip
         #   archive. On installation, Blender extracts the folder to a place such as:
         #       "C:\Users\[name]\AppData\Roaming\Blender Foundation\Blender\3.3\scripts\addons"
         #   Thus, the folder "[safe_name]" will get added to this add-on location. Otherwise, it just dumps all of the
         #   individual files in there and Blender can't figure out what to do with it.
+    if no_pyCache:
+        remove_pycache(working_dir)
 
     shutil.make_archive(temp_dir.name, 'zip', temp_dir.name) # Creates a .zip in the same location as the working folder
 
