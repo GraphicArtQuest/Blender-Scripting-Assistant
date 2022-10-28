@@ -36,19 +36,22 @@ import bpy
 from .preferences import DebuggerPreferences
 from .ui import DebuggerPanel, DebugServerPanel
 
-# from .bundler import bundle
-# from .directory_monitor import monitor
-from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 from .operators.debugger_check import DebuggerCheck
 from .operators.debug_server_start import DebugServerStart
+from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 
 debugger_classes = (
+   # Panels
    DebuggerPanel,
    DebugServerPanel,
-   DebuggerPreferences,
+
+   # Operators
    DebuggerCheck,
    DebugServerStart,
-   ToggleBlenderTerminal
+   ToggleBlenderTerminal,
+
+   # Preferences
+   DebuggerPreferences
 )
 
 def register():
