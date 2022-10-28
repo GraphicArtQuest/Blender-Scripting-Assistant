@@ -439,9 +439,9 @@ class TestDirectoryMonitor(unittest.TestCase):
         monitor.subscribe('test3', test)
         monitor.watch()
         modify_test_file1()
-        time.sleep(monitor.polling_delay * 1.2)
+        time.sleep(monitor.polling_delay * 1.5)
         modify_test_file2()
-        time.sleep(monitor.polling_delay * 1.2)
+        time.sleep(monitor.polling_delay * 1.5)
         monitor.secure()
         monitor.clear_subscribers()
         
@@ -465,9 +465,9 @@ class TestDirectoryMonitor(unittest.TestCase):
         monitor.subscribe('test3', test)
         monitor.watch()
         modify_test_file1()
-        time.sleep(monitor.polling_delay * 1.1)
+        time.sleep(monitor.polling_delay * 1.5)
         modify_test_file2()
-        time.sleep(monitor.polling_delay * 1.1)
+        time.sleep(monitor.polling_delay * 1.5)
         monitor.secure()
         monitor.clear_subscribers()
 
