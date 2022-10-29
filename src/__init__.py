@@ -19,16 +19,16 @@ Created by Alan North
 '''
 
 bl_info = {
-   'name': 'Debugger for VS Code',
-   'author': 'Alan North, M. Scott Lassiter',
-   'version': (2, 2, 0),
-   'blender': (3, 3, 0), # Haven't verified on anything lower than 3.3
-   "description": "Starts debugging server for VS Code.",
-   'location': 'In search (Edit > Operator Search) type "Debug"',
-   "warning": "",
-   "doc_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode", 
-   "tracker_url": "https://github.com/AlansCodeLog/blender-debugger-for-vscode/issues",
-   'category': 'Development',
+    'name': "Debugger for VS Code",
+    'author': "Alan North, M. Scott Lassiter",
+    'version': (2, 2, 0),
+    'blender': (3, 3, 0), # Haven't verified on anything lower than 3.3
+    'description': "Starts debugging server for VS Code.",
+    'location': "N-Panel > Debugger",
+    'warning': "",
+    'doc_url': "https://github.com/AlansCodeLog/blender-debugger-for-vscode", 
+    'tracker_url': "https://github.com/AlansCodeLog/blender-debugger-for-vscode/issues",
+    'category': 'Development',
 }
 
 import bpy
@@ -42,27 +42,27 @@ from .operators.open_addon_preferences import OpenAddonPreferences
 from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 
 debugger_classes = (
-   # Panels
-   DebuggerPanel,
-   DebugServerPanel,
+    # Panels
+    DebuggerPanel,
+    DebugServerPanel,
 
-   # Operators
-   DebuggerCheck,
-   DebugServerStart,
-   OpenAddonPreferences,
-   ToggleBlenderTerminal,
+    # Operators
+    DebuggerCheck,
+    DebugServerStart,
+    OpenAddonPreferences,
+    ToggleBlenderTerminal,
 
-   # Preferences
-   DebuggerPreferences
+    # Preferences
+    DebuggerPreferences
 )
 
 def register():
-   for cls in debugger_classes:
-      bpy.utils.register_class(cls)
+    for cls in debugger_classes:
+        bpy.utils.register_class(cls)
 
 def unregister(): 
-   for cls in debugger_classes:
-      bpy.utils.unregister_class(cls)
+    for cls in debugger_classes:
+        bpy.utils.unregister_class(cls)
 
 if __name__ == "__main__":
-   register()
+    register()
