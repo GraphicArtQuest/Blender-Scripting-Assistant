@@ -40,5 +40,5 @@ class DebugServerStart(bpy.types.Operator):
          debugpy.wait_for_client()
 
       # call our confirmation listener
-      bpy.ops.debug.check_for_debugger()
+      bpy.ops.debugger.check_for_debugger()
       return {"FINISHED"}
