@@ -59,6 +59,7 @@ debugger_classes = (
 def register():
     for cls in debugger_classes:
         bpy.utils.register_class(cls)
+    bpy.context.preferences.use_preferences_save = True
 
 def unregister(): 
     for cls in debugger_classes:

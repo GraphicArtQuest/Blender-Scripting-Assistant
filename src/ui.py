@@ -21,6 +21,13 @@ def update_debugpy_path(self, context):
     print(self.debugpy_path)
     bpy.context.preferences.addons[__package__].preferences.debugpy_path = self.debugpy_path
 
+def get_debugpy_port_value(self):
+    return bpy.context.preferences.addons[__package__].preferences.debugpy_port
+
+def set_debugpy_port_value(self, value):
+    bpy.context.preferences.addons[__package__].preferences.debugpy_port = value
+    print('Updated Debugpy Port to ' + str(value))
+
 class DebuggerPanel(bpy.types.Panel):
     """The main panel for all the Blender Debugger tools"""
     bl_label = "Blender Debugger for VS Code"
@@ -28,19 +35,6 @@ class DebuggerPanel(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'Debugger'
-
-    def draw(self, context):
-        layout = self.layout
-        row = layout.row()
-        row.label(text=str(bpy.context.preferences.addons[__package__].preferences.monitor_path))
-        row = layout.row()
-        row.operator('debugger.toggle_terminal', text="Toggle Terminal")
-        row = layout.row()
-        row.operator('debugger.open_addon_preferences', text="Open Add-on Preferences")
-        row = layout.row()
-        row.prop(context.scene, 'watch_for_updates')
-        row = layout.row()
-        row.prop(context.scene, 'debugpy_path')
     
     bpy.types.Scene.watch_for_updates = bpy.props.BoolProperty(
             name='Watch for Updates',
@@ -54,6 +48,19 @@ class DebuggerPanel(bpy.types.Panel):
             update=update_debugpy_path
         )
 
+    def draw(self, context):
+        layout = self.layout
+        row = layout.row()
+        row.label(text=str(bpy.context.preferences.addons[__package__].preferences.monitor_path))
+        row = layout.row()
+        row.operator('debugger.toggle_terminal', text="Toggle Terminal")
+        row = layout.row()
+        row.operator('debugger.open_addon_preferences', text="Open Add-on Preferences")
+        row = layout.row()
+        row.prop(context.scene, 'watch_for_updates')
+        row = layout.row()
+        row.prop(context.scene, 'debugpy_path')
+
 class DebugServerPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
     bl_label = "Debug Server Settings"
@@ -64,13 +71,23 @@ class DebugServerPanel(bpy.types.Panel):
     bl_parent_id = "OBJECT_PT_DebuggerPanel"
     bl_options = {"DEFAULT_CLOSED"}
 
+    bpy.types.Scene.debugpy_port = bpy.props.IntProperty(
+        name="Debug Server Port",
+        min=0,
+        max=65535,
+        get=get_debugpy_port_value,
+        set=set_debugpy_port_value
+    )
+
     def draw(self, context):
         layout = self.layout
         row = layout.row()
         row.label(text="Port to use. Should match port in VS Code's launch.json.")
-        portText = str(bpy.context.preferences.addons[__package__].preferences.debugpy_port)
-        row.operator('debugger.connect_debugger_vscode', text="Start Debug Server", icon="SCRIPT")
-        row.label(text=portText)
+        row = layout.separator()
         row = layout.row()
+        row.prop(context.scene, "debugpy_port")
+        row = layout.row()
+        row.operator('debugger.connect_debugger_vscode', text="Start Debug Server", icon="SCRIPT")
         # row.prop(bpy.context.preferences.addons[__package__].preferences.port)
         # row.prop(context.scene, __package__ + "port") # Can't figure out how to make this work
+
