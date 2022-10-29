@@ -14,8 +14,8 @@ class DebugServerStart(bpy.types.Operator):
    def execute(self, context):
       #get debugpy and import if exists
       prefs = bpy.context.preferences.addons["blender-debugger-for-vscode"].preferences
-      debugpy_path = prefs.path.rstrip("/")
-      debugpy_port = prefs.port
+      debugpy_path = prefs.debugpy_path.rstrip("/")
+      debugpy_port = prefs.debugpy_port
 
       #actually check debugpy is still available
       if debugpy_path == "debugpy not found":

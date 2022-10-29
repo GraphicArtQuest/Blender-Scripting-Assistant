@@ -7,31 +7,31 @@ from .debug_server import check_for_debugpy
 class DebuggerPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
 
-    path: bpy.props.StringProperty(
+    debugpy_path: bpy.props.StringProperty(
         name="Location of debugpy (site-packages folder)",
         subtype="DIR_PATH",
         default=check_for_debugpy()
     )
 
-    timeout: bpy.props.IntProperty(
+    debugpy_timeout: bpy.props.IntProperty(
         name="Timeout",
         default=20
     )
 
-    port: bpy.props.IntProperty(
+    debugpy_port: bpy.props.IntProperty(
         name="Port",
         min=0,
         max=65535,
         default=5678
     )
 
-    debugpath: bpy.props.StringProperty(
+    monitor_path: bpy.props.StringProperty(
         name="File or Folder to Debug",
         subtype="FILE_PATH",
         default= os.path.dirname(__file__)
     )
 
-    watch_For_Updates: bpy.props.BoolProperty(
+    watch_for_updates: bpy.props.BoolProperty(
         name="Watch for Updates",
         default=True
     )
@@ -51,5 +51,5 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
         row_port.label(text="Port to use. Should match port in VS Code's launch.json.")
 
         row_debug = layout.split()
-        row_debug.prop(self, "debugpath")
+        row_debug.prop(self, "monitor_path")
         row_debug.prop(self, "watch_For_Updates")

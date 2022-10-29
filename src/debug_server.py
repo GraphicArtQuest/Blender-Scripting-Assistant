@@ -73,7 +73,7 @@ def check_for_debugpy():
 # check if debugger has attached
 def check_done(i, modal_limit, prefs):
    if i == 0 or i % 60 == 0:
-      print("Waiting... (on port "+str(prefs.port)+")")
+      print("Waiting... (on port "+str(prefs.debugpy_port)+")")
    if i > modal_limit:
       print("Attach Confirmation Listener Timed Out")
       return {"CANCELLED"}

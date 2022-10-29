@@ -23,7 +23,7 @@ class DebuggerCheck(bpy.types.Operator):
       # set initial variables
       self.count = 0
       prefs = bpy.context.preferences.addons["blender-debugger-for-vscode"].preferences
-      self.modal_limit = prefs.timeout*60
+      self.modal_limit = prefs.debugpy_timeout*60
 
       wm = context.window_manager
       self._timer = wm.event_timer_add(0.1, window=context.window)
