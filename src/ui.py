@@ -36,6 +36,8 @@ class DebuggerPanel(bpy.types.Panel):
         row = layout.row()
         row.operator('debugger.toggle_terminal', text="Toggle Terminal")
         row = layout.row()
+        row.operator('debugger.open_addon_preferences', text="Open Add-on Preferences")
+        row = layout.row()
         row.prop(context.scene, 'watch_for_updates')
         row = layout.row()
         row.prop(context.scene, 'debugpy_path')

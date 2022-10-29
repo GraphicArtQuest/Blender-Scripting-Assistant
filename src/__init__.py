@@ -38,6 +38,7 @@ from .ui import DebuggerPanel, DebugServerPanel
 
 from .operators.debugger_check import DebuggerCheck
 from .operators.debug_server_start import DebugServerStart
+from .operators.open_addon_preferences import OpenAddonPreferences
 from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 
 debugger_classes = (
@@ -48,6 +49,7 @@ debugger_classes = (
    # Operators
    DebuggerCheck,
    DebugServerStart,
+   OpenAddonPreferences,
    ToggleBlenderTerminal,
 
    # Preferences

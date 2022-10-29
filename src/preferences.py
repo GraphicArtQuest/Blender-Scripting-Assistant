@@ -30,6 +30,12 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
         subtype="FILE_PATH",
         default= os.path.dirname(__file__)
     )
+    
+    monitor_addon_name: bpy.props.StringProperty(
+        name="Name of Monitored Add-on",
+        subtype="FILE_PATH",
+        default= "Debugger for VS Code"
+    )
 
     watch_for_updates: bpy.props.BoolProperty(
         name="Watch for Updates",
