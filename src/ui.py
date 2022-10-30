@@ -1,3 +1,5 @@
+import os
+
 import bpy
 
 def update_watch_for_updates(self, context):
@@ -14,7 +16,7 @@ def update_watch_for_updates(self, context):
         #   pollTimer.cancel()
         print ('Secured from polling for updates.')
 
-def update_debugpy_path(self, context):
+def update_monitor_path(self, context):
     """Runs when the 'File or Folder to Debug' changes"""
 
     print('Watch for updates: ' + str(self.watch_for_updates))
@@ -27,6 +29,16 @@ def get_debugpy_port_value(self):
 def set_debugpy_port_value(self, value):
     bpy.context.preferences.addons[__package__].preferences.debugpy_port = value
     print('Updated Debugpy Port to ' + str(value))
+
+def get_debugpy_path_value(self):
+    return bpy.context.preferences.addons[__package__].preferences.debugpy_path
+
+def set_debugpy_path_value(self, value):
+    if os.path.exists(value):
+        bpy.context.preferences.addons[__package__].preferences.debugpy_path = value
+        print('Updated Debugpy Path to ' + str(value))
+    else:
+        print('DebuggerError: The following path does not exist: ' + str(value))
 
 class DebuggerPanel(bpy.types.Panel):
     """The main panel for all the Blender Debugger tools"""
@@ -42,10 +54,10 @@ class DebuggerPanel(bpy.types.Panel):
             update=update_watch_for_updates
         )
     
-    bpy.types.Scene.debugpy_path = bpy.props.StringProperty(
+    bpy.types.Scene.monitor_path = bpy.props.StringProperty(
             name="Folder to Debug",
             subtype="FILE_PATH",
-            update=update_debugpy_path
+            update=update_monitor_path
         )
 
     def draw(self, context):
@@ -79,15 +91,22 @@ class DebugServerPanel(bpy.types.Panel):
         set=set_debugpy_port_value
     )
 
+    bpy.types.Scene.debugpy_path = bpy.props.StringProperty(
+            name="Path to Debugpy",
+            subtype="FILE_PATH",
+        get=get_debugpy_path_value,
+        set=set_debugpy_path_value
+        )
+
     def draw(self, context):
         layout = self.layout
         row = layout.row()
         row.label(text="Port to use. Should match port in VS Code's launch.json.")
         row = layout.separator()
         row = layout.row()
+        row.prop(context.scene, "debugpy_path")
+        row = layout.row()
         row.prop(context.scene, "debugpy_port")
         row = layout.row()
         row.operator('debugger.connect_debugger_vscode', text="Start Debug Server", icon="SCRIPT")
-        # row.prop(bpy.context.preferences.addons[__package__].preferences.port)
-        # row.prop(context.scene, __package__ + "port") # Can't figure out how to make this work
 
