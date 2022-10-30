@@ -8,18 +8,18 @@ def update_watch_for_updates(self, context):
     bpy.context.preferences.addons[__package__].preferences.watch_for_updates = self.watch_for_updates
 
     if self.watch_for_updates:
-        print ('Commenced polling for updates to the debug folder.')
+        print ("Commenced polling for updates to the debug folder.")
         #   start_Polling_For_Updates()
     else:
         # You have to stop this timer when turning off update polling, or else
         #     you just accumulate more and more timers until you close Blender.
         #   pollTimer.cancel()
-        print ('Secured from polling for updates.')
+        print ("Secured from polling for updates.")
 
 def update_monitor_path(self, context):
     """Runs when the 'File or Folder to Debug' changes"""
 
-    print('Watch for updates: ' + str(self.watch_for_updates))
+    print("Watch for updates: " + str(self.watch_for_updates))
     print(self.debugpy_path)
     bpy.context.preferences.addons[__package__].preferences.debugpy_path = self.debugpy_path
 
@@ -29,7 +29,7 @@ def get_debugpy_port_value(self):
 def set_debugpy_port_value(self, value):
     # Because this extends the IntProperty, no additional error handling required
     bpy.context.preferences.addons[__package__].preferences.debugpy_port = value
-    print('Updated Debugpy Port to ' + str(value))
+    print("Updated Debugpy Port to " + str(value))
 
 def get_debugpy_timeout_value(self):
     return bpy.context.preferences.addons[__package__].preferences.debugpy_timeout
@@ -45,9 +45,9 @@ def get_debugpy_path_value(self):
 def set_debugpy_path_value(self, value):
     if os.path.exists(value):
         bpy.context.preferences.addons[__package__].preferences.debugpy_path = value
-        print('Updated Debugpy Path to ' + str(value))
+        print("Updated Debugpy Path to " + str(value))
     else:
-        print('DebuggerError: The following path does not exist: ' + str(value))
+        print("DebuggerError: The path " + str(value) + " does not exist. No changes made.")
 
 class DebuggerPanel(bpy.types.Panel):
     """The main panel for all the Blender Debugger tools"""
@@ -65,7 +65,7 @@ class DebuggerPanel(bpy.types.Panel):
     
     bpy.types.Scene.monitor_path = bpy.props.StringProperty(
         name="Folder to Debug",
-        subtype="FILE_PATH",
+        subtype='FILE_PATH',
         update=update_monitor_path
     )
 
@@ -90,7 +90,7 @@ class DebugServerPanel(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'Debugger'
     bl_parent_id = "OBJECT_PT_DebuggerPanel"
-    bl_options = {"DEFAULT_CLOSED"}
+    bl_options = {'DEFAULT_CLOSED'}
 
     bpy.types.Scene.debugpy_port = bpy.props.IntProperty(
         name="Debug Server Port",
@@ -102,7 +102,7 @@ class DebugServerPanel(bpy.types.Panel):
 
     bpy.types.Scene.debugpy_path = bpy.props.StringProperty(
             name="Path to Debugpy",
-            subtype="FILE_PATH",
+            subtype='FILE_PATH',
         get=get_debugpy_path_value,
         set=set_debugpy_path_value
     )
@@ -127,5 +127,4 @@ class DebugServerPanel(bpy.types.Panel):
         row = layout.row()
         row.prop(context.scene, "debugpy_timeout")
         row = layout.row()
-        row.operator('debugger.connect_debugger_vscode', text="Start Debug Server", icon="SCRIPT")
-
+        row.operator("debugger.connect_debugger_vscode", text="Start Debug Server", icon='SCRIPT')

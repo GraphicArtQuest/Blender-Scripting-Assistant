@@ -9,7 +9,7 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
 
     debugpy_path: bpy.props.StringProperty(
         name="Location of debugpy (site-packages folder)",
-        subtype="DIR_PATH",
+        subtype='DIR_PATH',
         default=check_for_debugpy()
     )
 
@@ -34,7 +34,7 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
     
     monitor_addon_name: bpy.props.StringProperty(
         name="Name of Monitored Add-on",
-        subtype="FILE_PATH",
+        subtype='FILE_PATH',
         default= "Debugger for VS Code"
     )
 
