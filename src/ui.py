@@ -60,31 +60,12 @@ class DebuggerPanel(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'Debugger'
     
-    bpy.types.Scene.watch_for_updates = bpy.props.BoolProperty(
-        name='Watch for Updates',
-        default=True,
-        update=update_watch_for_updates
-    )
-    
-    bpy.types.Scene.monitor_path = bpy.props.StringProperty(
-        name="Folder to Debug",
-        subtype='FILE_PATH',
-        get=get_monitor_path_value,
-        set=set_monitor_path_value
-    )
-
     def draw(self, context):
         layout = self.layout
-        row = layout.row()
-        row.label(text=str(bpy.context.preferences.addons[__package__].preferences.monitor_path))
         row = layout.row()
         row.operator("debugger.toggle_terminal", text="Toggle Terminal")
         row = layout.row()
         row.operator("debugger.open_addon_preferences", text="Open Add-on Preferences")
-        row = layout.row()
-        row.prop(context.scene, "watch_for_updates")
-        row = layout.row()
-        row.prop(context.scene, "monitor_path")
 
 class DebugServerPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
@@ -132,3 +113,33 @@ class DebugServerPanel(bpy.types.Panel):
         row.prop(context.scene, "debugpy_timeout")
         row = layout.row()
         row.operator("debugger.connect_debugger_vscode", text="Start Debug Server", icon='SCRIPT')
+
+class HotSwapPanel(bpy.types.Panel):
+    """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
+    bl_label = "Hot Swap Settings"
+    bl_idname = "OBJECT_PT_HotSwapPanel"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'Debugger'
+    bl_parent_id = "OBJECT_PT_DebuggerPanel"
+    bl_options = {'DEFAULT_CLOSED'}
+    
+    bpy.types.Scene.watch_for_updates = bpy.props.BoolProperty(
+        name='Watch for Updates',
+        default=True,
+        update=update_watch_for_updates
+    )
+    
+    bpy.types.Scene.monitor_path = bpy.props.StringProperty(
+        name="File/Folder to Debug:",
+        subtype='FILE_PATH',
+        get=get_monitor_path_value,
+        set=set_monitor_path_value
+    )
+    
+    def draw(self, context):
+        layout = self.layout
+        row = layout.row()
+        row.prop(context.scene, "monitor_path")
+        row = layout.row()
+        row.prop(context.scene, "watch_for_updates")

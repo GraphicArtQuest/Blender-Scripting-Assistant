@@ -34,7 +34,7 @@ bl_info = {
 import bpy
 
 from .preferences import DebuggerPreferences
-from .ui import DebuggerPanel, DebugServerPanel
+from .ui import DebuggerPanel, DebugServerPanel, HotSwapPanel
 
 from .operators.debugger_check import DebuggerCheck
 from .operators.debug_server_start import DebugServerStart
@@ -45,6 +45,7 @@ debugger_classes = (
     # Panels
     DebuggerPanel,
     DebugServerPanel,
+    HotSwapPanel,
 
     # Operators
     DebuggerCheck,
