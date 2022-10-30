@@ -21,11 +21,19 @@ class DirectoryMonitorMessages:
     
     def monitoring_active():
         print(color.CONTROL + "Monitoring is already active." + color.ENDC + " Continuing to monitor...")
+
+    def changed_directory(directory):
+        print("Updated the monitoring directory to: " + color.OKGREEN + directory + color.ENDC)
     
     def invalid_directory(directory):
-        print(DirectoryMonitorMessages._ErrorHeader() + "'DirectoryMonitor.directory' is invalid. Unable to monitor until "
-            + "provided a valid file or folder path.\n"
-            + "    Current bad DirectoryMonitor.directory: " + color.WARNING + str(directory) + color.ENDC)
+        print(DirectoryMonitorMessages._ErrorHeader() + "'DirectoryMonitor.directory' is invalid. Unable to monitor"
+            + " until provided a valid file or folder path.")
+        bad_dir = ""
+        if directory == "":
+            bad_dir = color.WARNING + "(Empty String)" + color.ENDC
+        else:
+            bad_dir = color.WARNING + str(directory) + color.ENDC
+        print("    Current bad DirectoryMonitor.directory: " + bad_dir)
     
     def file_or_folder_does_not_exist(dir_path):
         print(DirectoryMonitorMessages._ErrorHeader() + "The file or folder '" + color.WARNING +  dir_path + color.ENDC 
@@ -47,10 +55,11 @@ class DirectoryMonitorMessages:
             + "'. This script was never registered.")
     
     def unable_to_change_directory(new_dir, current_dir):
-        print(DirectoryMonitorMessages._ErrorHeader() + "'DirectoryMonitor.directory' must be a file or folder that exists.\n"
-            + "    You tried: " + color.WARNING + str(new_dir) + color.ENDC + "\n"
-            + "    Maintaining the current directory at: '" + color.OKGREEN + str(current_dir) + color.ENDC + "'")
+        print(DirectoryMonitorMessages._ErrorHeader()
+            + "'DirectoryMonitor.directory' must be a file or folder that exists.")
+        print("    You tried: " + color.WARNING + str(new_dir) + color.ENDC)
+        print("    Maintaining the current directory at: '" + color.OKGREEN + str(current_dir) + color.ENDC + "'")
     
     def invalid_polling_delay(delay):
-        print(DirectoryMonitorMessages._ErrorHeader() + "'DirectoryMonitor.polling_delay' must be a number greater than 0.\n"
-            + "    Maintaining poll interval at : " + color.OKGREEN + str(delay) + color.ENDC + " seconds.")
+        print(DirectoryMonitorMessages._ErrorHeader() + "'DirectoryMonitor.polling_delay' must be a number greater than"
+            + " 0. Maintaining polling interval at : " + color.OKGREEN + str(delay) + color.ENDC + " seconds.")

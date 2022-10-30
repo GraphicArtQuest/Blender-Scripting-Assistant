@@ -6,10 +6,12 @@ import threading
 from .console_messages.directory_monitor import DirectoryMonitorMessages as message
 
 class DirectoryMonitor(object):
-# This class monitors a specified file or folder for any changes.
-#
-#   The class uses properties for data validation. Accessing the self._ values directly
-#   could cause instabilities.
+    """This class monitors a specified file or folder for any changes.
+
+    Only one instance of this class can exist.
+
+    The class uses properties for data validation. Accessing the private self._ values directly could cause
+    instabilities."""
 
     def __init__(self):
         self._polling_delay = .15       # Seconds
@@ -54,6 +56,7 @@ class DirectoryMonitor(object):
         if os.path.exists(str(desired_directory)):
             self._directory = str(desired_directory)
             self._last_tracked_filecount = self._num_files(self._directory)
+            message.changed_directory(self._directory)
         else:
             message.unable_to_change_directory(desired_directory, self.directory)
     

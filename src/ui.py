@@ -2,19 +2,7 @@ import os
 
 import bpy
 
-def update_watch_for_updates(self, context):
-    """Runs when the 'Watch for Updates' checkbox changes"""
-
-    bpy.context.preferences.addons[__package__].preferences.watch_for_updates = self.watch_for_updates
-
-    if self.watch_for_updates:
-        print ("Commenced polling for updates to the debug folder.")
-        #   start_Polling_For_Updates()
-    else:
-        # You have to stop this timer when turning off update polling, or else
-        #     you just accumulate more and more timers until you close Blender.
-        #   pollTimer.cancel()
-        print ("Secured from polling for updates.")
+from .directory_monitor import monitor
 
 def get_debugpy_port_value(self):
     return bpy.context.preferences.addons[__package__].preferences.debugpy_port
@@ -46,11 +34,19 @@ def get_monitor_path_value(self):
     return bpy.context.preferences.addons[__package__].preferences.monitor_path
 
 def set_monitor_path_value(self, value):
-    if os.path.exists(value):
+    monitor.directory = value
+    if monitor.directory == value:
         bpy.context.preferences.addons[__package__].preferences.monitor_path = value
-        print("Updated moniotoring path to " + str(value))
+
+def update_watch_for_updates(self, context):
+    """Runs when the 'Watch for Updates' checkbox changes"""
+    bpy.context.preferences.addons[__package__].preferences.watch_for_updates = self.watch_for_updates
+
+    if self.watch_for_updates:
+        monitor.watch()
     else:
-        print("DebuggerError: The path " + str(value) + " does not exist. No changes made.")
+        monitor.secure()
+
 
 class DebuggerPanel(bpy.types.Panel):
     """The main panel for all the Blender Debugger tools"""

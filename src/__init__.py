@@ -33,6 +33,8 @@ bl_info = {
 
 import bpy
 
+from .directory_monitor import monitor
+
 from .preferences import DebuggerPreferences
 from .ui import DebuggerPanel, DebugServerPanel, HotSwapPanel
 
@@ -61,6 +63,9 @@ def register():
     for cls in debugger_classes:
         bpy.utils.register_class(cls)
     bpy.context.preferences.use_preferences_save = True
+
+    monitor.directory = bpy.context.preferences.addons[__package__].preferences.monitor_path
+        # Ensure the directory is set to a valid path at startup; prevents unexpected errors for the first time user
 
 def unregister(): 
     for cls in debugger_classes:
