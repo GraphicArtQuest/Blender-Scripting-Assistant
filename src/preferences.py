@@ -15,6 +15,7 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
 
     debugpy_timeout: bpy.props.IntProperty(
         name="Timeout",
+        min=0,
         default=20
     )
 
@@ -46,9 +47,7 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
         layout = self.layout
         # row_path.label(text="The addon will try to auto-find the location of debugpy. If no path is found or you would like to use a different path, set it here.")
 
-        row_timeout = layout.split()
-        row_timeout.prop(self, "debugpy_timeout")
-        row_timeout.label(text="Timeout in seconds for the attach confirmation listener.")
+        # row_timeout.label(text="Timeout in seconds for the attach confirmation listener.")
 
         # row_port.label(text="Port to use. Should match port in VS Code's launch.json.")
 

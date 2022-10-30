@@ -27,8 +27,17 @@ def get_debugpy_port_value(self):
     return bpy.context.preferences.addons[__package__].preferences.debugpy_port
 
 def set_debugpy_port_value(self, value):
+    # Because this extends the IntProperty, no additional error handling required
     bpy.context.preferences.addons[__package__].preferences.debugpy_port = value
     print('Updated Debugpy Port to ' + str(value))
+
+def get_debugpy_timeout_value(self):
+    return bpy.context.preferences.addons[__package__].preferences.debugpy_timeout
+
+def set_debugpy_timeout_value(self, value):
+    # Because this extends the IntProperty, no additional error handling required
+    bpy.context.preferences.addons[__package__].preferences.debugpy_timeout = value
+    print("Updated Debugpy Timeout to " + str(value) + " seconds.")
 
 def get_debugpy_path_value(self):
     return bpy.context.preferences.addons[__package__].preferences.debugpy_path
@@ -49,16 +58,16 @@ class DebuggerPanel(bpy.types.Panel):
     bl_category = 'Debugger'
     
     bpy.types.Scene.watch_for_updates = bpy.props.BoolProperty(
-            name='Watch for Updates',
-            default=True,
-            update=update_watch_for_updates
-        )
+        name='Watch for Updates',
+        default=True,
+        update=update_watch_for_updates
+    )
     
     bpy.types.Scene.monitor_path = bpy.props.StringProperty(
-            name="Folder to Debug",
-            subtype="FILE_PATH",
-            update=update_monitor_path
-        )
+        name="Folder to Debug",
+        subtype="FILE_PATH",
+        update=update_monitor_path
+    )
 
     def draw(self, context):
         layout = self.layout
@@ -96,7 +105,15 @@ class DebugServerPanel(bpy.types.Panel):
             subtype="FILE_PATH",
         get=get_debugpy_path_value,
         set=set_debugpy_path_value
-        )
+    )
+
+    bpy.types.Scene.debugpy_timeout = bpy.props.IntProperty(
+        name="Attach Timeout",
+        min=0,
+        default=20,
+        get=get_debugpy_timeout_value,
+        set=set_debugpy_timeout_value
+    )
 
     def draw(self, context):
         layout = self.layout
@@ -107,6 +124,8 @@ class DebugServerPanel(bpy.types.Panel):
         row.prop(context.scene, "debugpy_path")
         row = layout.row()
         row.prop(context.scene, "debugpy_port")
+        row = layout.row()
+        row.prop(context.scene, "debugpy_timeout")
         row = layout.row()
         row.operator('debugger.connect_debugger_vscode', text="Start Debug Server", icon="SCRIPT")
 
