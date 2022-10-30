@@ -82,16 +82,12 @@ class TestDirectoryMonitor(unittest.TestCase):
         monitor.polling_delay = .15 # Reset to default
         
     def test_prop_update_active_fails(self):
-        # Verify monitor.active is read only
-        try:
+        """This is a read only property, so trying to set it via any method should raise an error"""
+        with self.assertRaises(AttributeError):
             monitor.active = True
-        except:
-            self.assertFalse(monitor.active)
         
-        try:
+        with self.assertRaises(AttributeError):
             monitor.active = False
-        except:
-            self.assertFalse(monitor.active)
     
     def test_prop_update_directory(self):
         
@@ -259,6 +255,10 @@ class TestDirectoryMonitor(unittest.TestCase):
         monitor.clear_subscribers()
         monitor.subscribe('test', test)
         monitor.watch()
+        counter = 0
+        while counter < 5 and testval < 10:
+            counter += 1
+            time.sleep(monitor.polling_delay)
         monitor.secure()
         monitor.clear_subscribers()
 
@@ -439,9 +439,17 @@ class TestDirectoryMonitor(unittest.TestCase):
         monitor.subscribe('test3', test)
         monitor.watch()
         modify_test_file1()
-        time.sleep(monitor.polling_delay * 1.5)
+        # Give it a chance to detect the first change it should
+        counter = 0
+        while counter < 5 and testval < 60:
+            counter += 1
+            time.sleep(monitor.polling_delay)
         modify_test_file2()
-        time.sleep(monitor.polling_delay * 1.5)
+        # Give it a chance to detect the second change it should
+        counter = 0
+        while counter < 5 and testval < 90:
+            counter += 1
+            time.sleep(monitor.polling_delay)
         monitor.secure()
         monitor.clear_subscribers()
         
@@ -465,9 +473,17 @@ class TestDirectoryMonitor(unittest.TestCase):
         monitor.subscribe('test3', test)
         monitor.watch()
         modify_test_file1()
-        time.sleep(monitor.polling_delay * 1.5)
+        # Give it a chance to detect the change it should
+        counter = 0
+        while counter < 10 and testval < 60:
+            counter += 1
+            time.sleep(monitor.polling_delay)
         modify_test_file2()
-        time.sleep(monitor.polling_delay * 1.5)
+        # Give it a chance to detect the change it should not
+        counter = 0
+        while counter < 3:
+            counter += 1
+            time.sleep(monitor.polling_delay)
         monitor.secure()
         monitor.clear_subscribers()
 
@@ -491,9 +507,17 @@ class TestDirectoryMonitor(unittest.TestCase):
         monitor.subscribe('test3', test)
         monitor.watch()
         modify_test_file1()
-        time.sleep(monitor.polling_delay * 1.1)
+        # Give it a chance to detect the change it should
+        counter = 0
+        while counter < 5 and testval < 60:
+            counter += 1
+            time.sleep(monitor.polling_delay)
         modify_test_file2()
-        time.sleep(monitor.polling_delay * 1.1)
+        counter = 0
+        # Give it a chance to detect the change it should not (but limit how many times)
+        while counter < 3:
+            counter += 1
+            time.sleep(monitor.polling_delay)
         monitor.secure()
         monitor.clear_subscribers()
 
