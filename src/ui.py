@@ -16,13 +16,6 @@ def update_watch_for_updates(self, context):
         #   pollTimer.cancel()
         print ("Secured from polling for updates.")
 
-def update_monitor_path(self, context):
-    """Runs when the 'File or Folder to Debug' changes"""
-
-    print("Watch for updates: " + str(self.watch_for_updates))
-    print(self.debugpy_path)
-    bpy.context.preferences.addons[__package__].preferences.debugpy_path = self.debugpy_path
-
 def get_debugpy_port_value(self):
     return bpy.context.preferences.addons[__package__].preferences.debugpy_port
 
@@ -49,6 +42,16 @@ def set_debugpy_path_value(self, value):
     else:
         print("DebuggerError: The path " + str(value) + " does not exist. No changes made.")
 
+def get_monitor_path_value(self):
+    return bpy.context.preferences.addons[__package__].preferences.monitor_path
+
+def set_monitor_path_value(self, value):
+    if os.path.exists(value):
+        bpy.context.preferences.addons[__package__].preferences.monitor_path = value
+        print("Updated moniotoring path to " + str(value))
+    else:
+        print("DebuggerError: The path " + str(value) + " does not exist. No changes made.")
+
 class DebuggerPanel(bpy.types.Panel):
     """The main panel for all the Blender Debugger tools"""
     bl_label = "Blender Debugger for VS Code"
@@ -66,7 +69,8 @@ class DebuggerPanel(bpy.types.Panel):
     bpy.types.Scene.monitor_path = bpy.props.StringProperty(
         name="Folder to Debug",
         subtype='FILE_PATH',
-        update=update_monitor_path
+        get=get_monitor_path_value,
+        set=set_monitor_path_value
     )
 
     def draw(self, context):
@@ -74,13 +78,13 @@ class DebuggerPanel(bpy.types.Panel):
         row = layout.row()
         row.label(text=str(bpy.context.preferences.addons[__package__].preferences.monitor_path))
         row = layout.row()
-        row.operator('debugger.toggle_terminal', text="Toggle Terminal")
+        row.operator("debugger.toggle_terminal", text="Toggle Terminal")
         row = layout.row()
-        row.operator('debugger.open_addon_preferences', text="Open Add-on Preferences")
+        row.operator("debugger.open_addon_preferences", text="Open Add-on Preferences")
         row = layout.row()
-        row.prop(context.scene, 'watch_for_updates')
+        row.prop(context.scene, "watch_for_updates")
         row = layout.row()
-        row.prop(context.scene, 'debugpy_path')
+        row.prop(context.scene, "monitor_path")
 
 class DebugServerPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""

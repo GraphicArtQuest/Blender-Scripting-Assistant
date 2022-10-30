@@ -43,14 +43,10 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
         default=True
     )
 
-    def draw(self, context):
-        layout = self.layout
+    # def draw(self, context):
+    #     layout = self.layout
         # row_path.label(text="The addon will try to auto-find the location of debugpy. If no path is found or you would like to use a different path, set it here.")
 
         # row_timeout.label(text="Timeout in seconds for the attach confirmation listener.")
 
         # row_port.label(text="Port to use. Should match port in VS Code's launch.json.")
-
-        row_debug = layout.split()
-        row_debug.prop(self, "monitor_path")
-        row_debug.prop(self, "watch_for_updates")
