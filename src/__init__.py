@@ -21,10 +21,10 @@ Created by Alan North
 bl_info = {
     'name': "Debugger for VS Code",
     'author': "Alan North, M. Scott Lassiter",
-    'version': (2, 2, 0),
-    'blender': (3, 3, 0), # Haven't verified on anything lower than 3.3
+    'version': (3, 0, 0),
+    'blender': (3, 3, 0), # Debugpy doesn't seem to work on previous versions. Unable to import it...
     'description': "Starts debugging server for VS Code.",
-    'location': "N-Panel > Debugger",
+    'location': "View 3D > Sidebar > Debugger Tab",
     'warning': "",
     'doc_url': "https://github.com/AlansCodeLog/blender-debugger-for-vscode", 
     'tracker_url': "https://github.com/AlansCodeLog/blender-debugger-for-vscode/issues",
