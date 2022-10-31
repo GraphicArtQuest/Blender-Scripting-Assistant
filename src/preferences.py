@@ -29,7 +29,7 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
     monitor_path: bpy.props.StringProperty(
         name="File or Folder to Debug",
         subtype="FILE_PATH",
-        default= os.path.dirname(__file__)
+        default= ""
     )
     
     monitor_addon_name: bpy.props.StringProperty(
@@ -37,16 +37,3 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
         subtype='FILE_PATH',
         default= "Debugger for VS Code"
     )
-
-    watch_for_updates: bpy.props.BoolProperty(
-        name="Watch for Updates",
-        default=True
-    )
-
-    # def draw(self, context):
-    #     layout = self.layout
-        # row_path.label(text="The addon will try to auto-find the location of debugpy. If no path is found or you would like to use a different path, set it here.")
-
-        # row_timeout.label(text="Timeout in seconds for the attach confirmation listener.")
-
-        # row_port.label(text="Port to use. Should match port in VS Code's launch.json.")

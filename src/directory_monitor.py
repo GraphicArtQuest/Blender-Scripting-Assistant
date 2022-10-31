@@ -147,7 +147,8 @@ class DirectoryMonitor(object):
         
         self._scan_and_update(self.directory)
         self._poll_timer = threading.Timer(self.polling_delay, self._poll)
-        self._poll_timer.start()
+        if self._last_tracked_update > 0:   # Break out of infinite loop if the poll request was cancelled
+            self._poll_timer.start()
     
     def watch(self):
         if not os.path.exists(str(self.directory)):
@@ -162,7 +163,8 @@ class DirectoryMonitor(object):
         
         # Hasn't been run yet. Initialize and commence monitoring
         self._poll()
-        message.watch()
+        if monitor.active:
+            message.watch() # Let the user know that there wasn't another error along the way that disabled the monitor
     
     def secure(self):
         self._poll_timer.cancel()

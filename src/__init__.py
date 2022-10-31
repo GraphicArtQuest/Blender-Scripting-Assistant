@@ -34,12 +34,15 @@ bl_info = {
 import bpy
 
 from .directory_monitor import monitor
+from .hot_swap import reload_modules
 
 from .preferences import DebuggerPreferences
 from .ui import DebuggerPanel, DebugServerPanel, HotSwapPanel
 
 from .operators.debugger_check import DebuggerCheck
 from .operators.debug_server_start import DebugServerStart
+from .operators.monitor_start import MonitorStart
+from .operators.monitor_stop import MonitorStop
 from .operators.open_addon_preferences import OpenAddonPreferences
 from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 
@@ -52,6 +55,8 @@ debugger_classes = (
     # Operators
     DebuggerCheck,
     DebugServerStart,
+    MonitorStart,
+    MonitorStop,
     OpenAddonPreferences,
     ToggleBlenderTerminal,
 
@@ -64,8 +69,10 @@ def register():
         bpy.utils.register_class(cls)
     bpy.context.preferences.use_preferences_save = True
 
-    monitor.directory = bpy.context.preferences.addons[__package__].preferences.monitor_path
+    monitor._directory = bpy.context.preferences.addons[__package__].preferences.monitor_path
         # Ensure the directory is set to a valid path at startup; prevents unexpected errors for the first time user
+    
+    monitor.subscribe("Hotswap", reload_modules)
 
 def unregister(): 
     for cls in debugger_classes:

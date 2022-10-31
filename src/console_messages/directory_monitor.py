@@ -27,7 +27,7 @@ class DirectoryMonitorMessages:
     
     def invalid_directory(directory):
         print(DirectoryMonitorMessages._ErrorHeader() + "'DirectoryMonitor.directory' is invalid. Unable to monitor"
-            + " until provided a valid file or folder path.")
+            + " until provided a valid file or folder path in the hot swap settings.")
         bad_dir = ""
         if directory == "":
             bad_dir = color.WARNING + "(Empty String)" + color.ENDC

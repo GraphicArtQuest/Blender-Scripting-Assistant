@@ -38,15 +38,6 @@ def set_monitor_path_value(self, value):
     if monitor.directory == value:
         bpy.context.preferences.addons[__package__].preferences.monitor_path = value
 
-def update_watch_for_updates(self, context):
-    """Runs when the 'Watch for Updates' checkbox changes"""
-    bpy.context.preferences.addons[__package__].preferences.watch_for_updates = self.watch_for_updates
-
-    if self.watch_for_updates:
-        monitor.watch()
-    else:
-        monitor.secure()
-
 
 class DebuggerPanel(bpy.types.Panel):
     """The main panel for all the Blender Debugger tools"""
@@ -62,6 +53,13 @@ class DebuggerPanel(bpy.types.Panel):
         row.operator("debugger.toggle_terminal", text="Toggle Terminal")
         row = layout.row()
         row.operator("debugger.open_addon_preferences", text="Open Add-on Preferences")
+        row = layout.row()
+        row.operator("debugger.connect_debugger_vscode", text="Start Debug Server", icon='SCRIPT')
+        row = layout.row()
+        if monitor.active:
+            row.operator("debugger.monitor_stop", text="Stop Monitoring", icon='PAUSE')
+        else:
+            row.operator("debugger.monitor_start", text="Start Monitoring", icon='PLAY')
 
 class DebugServerPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
@@ -98,17 +96,10 @@ class DebugServerPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        row = layout.row()
-        row.label(text="Port to use. Should match port in VS Code's launch.json.")
-        row = layout.separator()
-        row = layout.row()
-        row.prop(context.scene, "debugpy_path")
-        row = layout.row()
-        row.prop(context.scene, "debugpy_port")
-        row = layout.row()
-        row.prop(context.scene, "debugpy_timeout")
-        row = layout.row()
-        row.operator("debugger.connect_debugger_vscode", text="Start Debug Server", icon='SCRIPT')
+        row = layout.box()
+        row.prop(context.scene, "debugpy_path") # The addon will try to auto-find the location of debugpy. If no path is found or you would like to use a different path, set it here
+        row.prop(context.scene, "debugpy_port") # Port to use. Should match port in VS Code's launch.json
+        row.prop(context.scene, "debugpy_timeout") # Timeout in seconds for the attach confirmation listener
 
 class HotSwapPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
@@ -120,12 +111,6 @@ class HotSwapPanel(bpy.types.Panel):
     bl_parent_id = "OBJECT_PT_DebuggerPanel"
     bl_options = {'DEFAULT_CLOSED'}
     
-    bpy.types.Scene.watch_for_updates = bpy.props.BoolProperty(
-        name='Watch for Updates',
-        default=True,
-        update=update_watch_for_updates
-    )
-    
     bpy.types.Scene.monitor_path = bpy.props.StringProperty(
         name="File/Folder to Debug:",
         subtype='FILE_PATH',
@@ -135,7 +120,5 @@ class HotSwapPanel(bpy.types.Panel):
     
     def draw(self, context):
         layout = self.layout
-        row = layout.row()
+        row = layout.box()
         row.prop(context.scene, "monitor_path")
-        row = layout.row()
-        row.prop(context.scene, "watch_for_updates")
