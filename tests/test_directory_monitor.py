@@ -506,6 +506,12 @@ class TestDirectoryMonitor(unittest.TestCase):
         monitor.subscribe('test2', test)
         monitor.subscribe('test3', test)
         monitor.watch()
+        # Sometimes the test went so fast it didn't have time to run on the initial watch. This loop makes sure
+        #   that it catches up before modifying tracked file.
+        counter = 0
+        while counter < 5 and testval < 30:
+            counter += 1
+            time.sleep(monitor.polling_delay)
         modify_test_file1()
         # Give it a chance to detect the change it should
         counter = 0
