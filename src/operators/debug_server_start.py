@@ -5,15 +5,15 @@ import sys
 import bpy
 
 class DebugServerStart(bpy.types.Operator):
-   bl_idname = "debugger.connect_debugger_vscode"
-   bl_label = "Debug: Start Debug Server for VS Code"
+   bl_idname = "scriptingassistant.start_debugpy_server"
+   bl_label = "Debugger: Start Debugpy Server"
    bl_description = "Starts debugpy server for debugger to attach to"
 
    waitForClient: bpy.props.BoolProperty(default=False)
 
    def execute(self, context):
       #get debugpy and import if exists
-      prefs = bpy.context.preferences.addons["blender-debugger-for-vscode"].preferences
+      prefs = bpy.context.preferences.addons["blender-scripting-assistant"].preferences
       debugpy_path = prefs.debugpy_path.rstrip("/")
       debugpy_port = prefs.debugpy_port
 
@@ -36,9 +36,9 @@ class DebugServerStart(bpy.types.Operator):
          print("Server already running.")
 
       if (self.waitForClient):
-         self.report({"INFO"}, "Blender Debugger for VSCode: Awaiting Connection")
+         self.report({"INFO"}, "Blender Scripting Assistant: Awaiting Connection")
          debugpy.wait_for_client()
 
       # call our confirmation listener
-      bpy.ops.debugger.check_for_debugger()
+      bpy.ops.scriptingassistant.check_for_debugger()
       return {"FINISHED"}

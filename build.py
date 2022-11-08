@@ -10,5 +10,5 @@ if __name__ == '__main__':
     bundle(
         source_files=[src_dir], 
         output_folder=dist_dir, 
-        name="blender-debugger-for-vscode", 
+        name="blender-scripting-assistant", 
         overwrite=True)

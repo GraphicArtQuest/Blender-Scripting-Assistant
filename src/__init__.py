@@ -1,8 +1,14 @@
 """
+Copyright (c) 2022 - Graphic Art Quest (Wayfind Entertainment LLC)
+
 Copyright (C) 2018 - 2022 Alan North
 alannorth@gmail.com
 
-Created by Alan North and M. Scott Lassiter
+Original project blender-debugger-for-vscode Created by Alan North
+https://github.com/AlansCodeLog/blender-debugger-for-vscode
+
+Fork and expansion into Blender Scripting Assistant by M. Scott Lassiter.
+https://graphicartquest.com/author/scott-lassiter/
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,15 +25,15 @@ Created by Alan North and M. Scott Lassiter
 """
 
 bl_info = {
-    'name': "Debugger for VS Code",
-    'author': "Alan North, M. Scott Lassiter",
-    'version': (3, 0, 0),
+    'name': "Blender Scripting Assistant",
+    'author': "M. Scott Lassiter, Alan North",
+    'version': (1, 0, 0),
     'blender': (3, 3, 0), # Debugpy doesn't seem to work on previous versions. Unable to import it...
-    'description': "Starts debugging server for VS Code.",
-    'location': "View 3D > Sidebar > Debugger Tab",
+    'description': "A comprehensive set of scripting and debugging tools for creating Blender add-ons.",
+    'location': "View 3D > Sidebar > Scripting Assistant Tab",
     'warning': "",
-    'doc_url': "https://github.com/AlansCodeLog/blender-debugger-for-vscode", 
-    'tracker_url': "https://github.com/AlansCodeLog/blender-debugger-for-vscode/issues",
+    'doc_url': "https://github.com/GraphicArtQuest/Blender-Scripting-Assistant", 
+    'tracker_url': "https://github.com/GraphicArtQuest/Blender-Scripting-Assistant/issues/new/choose",
     'category': 'Development',
 }
 
@@ -37,7 +43,7 @@ from .directory_monitor import monitor
 from .hot_swap import reload_modules
 
 from .preferences import DebuggerPreferences
-from .ui import DebuggerPanel, DebugServerPanel, HotSwapPanel
+from .ui import ScriptingAssistantPanel, DebugServerPanel, HotSwapPanel
 
 from .operators.debugger_check import DebuggerCheck
 from .operators.debug_server_start import DebugServerStart
@@ -48,7 +54,7 @@ from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 
 debugger_classes = (
     # Panels
-    DebuggerPanel,
+    ScriptingAssistantPanel,
     DebugServerPanel,
     HotSwapPanel,
 

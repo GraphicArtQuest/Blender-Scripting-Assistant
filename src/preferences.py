@@ -35,5 +35,5 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
     monitor_addon_name: bpy.props.StringProperty(
         name="Name of Monitored Add-on",
         subtype='FILE_PATH',
-        default= "Debugger for VS Code"
+        default= "Blender Scripting Assistant"
     )

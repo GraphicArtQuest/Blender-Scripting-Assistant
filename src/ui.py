@@ -28,7 +28,7 @@ def set_debugpy_path_value(self, value):
         bpy.context.preferences.addons[__package__].preferences.debugpy_path = value
         print("Updated Debugpy Path to " + str(value))
     else:
-        print("DebuggerError: The path " + str(value) + " does not exist. No changes made.")
+        print("ScriptingAssistantError: The path " + str(value) + " does not exist. No changes made.")
 
 def get_monitor_path_value(self):
     return bpy.context.preferences.addons[__package__].preferences.monitor_path
@@ -39,27 +39,27 @@ def set_monitor_path_value(self, value):
         bpy.context.preferences.addons[__package__].preferences.monitor_path = value
 
 
-class DebuggerPanel(bpy.types.Panel):
-    """The main panel for all the Blender Debugger tools"""
-    bl_label = "Blender Debugger for VS Code"
-    bl_idname = "OBJECT_PT_DebuggerPanel"
+class ScriptingAssistantPanel(bpy.types.Panel):
+    """The main panel for all the Blender Scripting Assistant tools"""
+    bl_label = "Blender Scripting Assistant"
+    bl_idname = "OBJECT_PT_ScriptingAssistantPanel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Debugger'
+    bl_category = 'Scripting Assistant'
     
     def draw(self, context):
         layout = self.layout
         row = layout.row()
-        row.operator("debugger.toggle_terminal", text="Toggle Terminal")
+        row.operator("scriptingassistant.toggle_terminal", text="Toggle Terminal")
         row = layout.row()
-        row.operator("debugger.open_addon_preferences", text="Open Add-on Preferences")
+        row.operator("scriptingassistant.open_addon_preferences", text="Open Add-on Preferences")
         row = layout.row()
-        row.operator("debugger.connect_debugger_vscode", text="Start Debug Server", icon='SCRIPT')
+        row.operator("scriptingassistant.start_debugpy_server", text="Start Debug Server", icon='SCRIPT')
         row = layout.row()
         if monitor.active:
-            row.operator("debugger.monitor_stop", text="Stop Monitoring", icon='PAUSE')
+            row.operator("scriptingassistant.monitor_stop", text="Stop Monitoring", icon='PAUSE')
         else:
-            row.operator("debugger.monitor_start", text="Start Monitoring", icon='PLAY')
+            row.operator("scriptingassistant.monitor_start", text="Start Monitoring", icon='PLAY')
 
 class DebugServerPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
@@ -67,8 +67,8 @@ class DebugServerPanel(bpy.types.Panel):
     bl_idname = "OBJECT_PT_DebugSubPanel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Debugger'
-    bl_parent_id = "OBJECT_PT_DebuggerPanel"
+    bl_category = 'Scripting Assistant'
+    bl_parent_id = "OBJECT_PT_ScriptingAssistantPanel"
     bl_options = {'DEFAULT_CLOSED'}
 
     bpy.types.Scene.debugpy_port = bpy.props.IntProperty(
@@ -107,8 +107,8 @@ class HotSwapPanel(bpy.types.Panel):
     bl_idname = "OBJECT_PT_HotSwapPanel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'Debugger'
-    bl_parent_id = "OBJECT_PT_DebuggerPanel"
+    bl_category = 'Scripting Assistant'
+    bl_parent_id = "OBJECT_PT_ScriptingAssistantPanel"
     bl_options = {'DEFAULT_CLOSED'}
     
     bpy.types.Scene.monitor_path = bpy.props.StringProperty(
