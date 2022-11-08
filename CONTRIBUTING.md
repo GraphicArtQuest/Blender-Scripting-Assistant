@@ -2,7 +2,9 @@
 
 <div align="center">
 
-[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+[![This Project Uses Conventional Commits](https://img.shields.io/badge/Commit%20Style-Conventional-e10079)](https://www.conventionalcommits.org/)
+[![Maintained](https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg)](https://graphicartquest.com/author/scott-lassiter/)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#how-can-i-contribute)
 
 **Thank you for contributing to Blender Scripting Assistant!**
 
