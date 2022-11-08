@@ -1,0 +1,44 @@
+name: Enhancement Request
+description: Request additional functionality to existing features or components
+title: 'Description'
+labels: ['enhancement']
+assignees:
+  - m-scott-lassiter
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you taking the time to fill out this request!
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: What part of the project are you requesting an enhancement to?
+      placeholder: i.e. specific API functionality, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: How specifically can this improve?
+      placeholder: By adding...
+    validations:
+      required: true
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Are you able/willing to make the change? (It's ok if you're not!)
+      multiple: false
+      options:
+        - 'No'
+        - 'Yes'
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow this project's [Code of Conduct](https://github.com/GraphicArtQuest/Blender-Scripting-Assistant/blob/master/CODE_OF_CONDUCT.md)
+          required: true
