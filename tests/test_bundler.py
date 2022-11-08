@@ -281,6 +281,14 @@ class TestBundler(unittest.TestCase):
 
         #####################################
         # TODO: Write tests for the no_pycache option 
+    
+    def test_bundle_with_no_pycache_has_no_python_binaries_in_zip(self):
+        pass
+        # Create a temp folder
+        # Create two empty python files
+        # Create a __pycache__ folder with two .pyc files, and a resources folder with two files
+        # Bundle this temp folder into a zip
+        # Check zip to make sure it has two folders (each with two files) and two main files
 
 if __name__ == '__main__':
     unittest.main()
