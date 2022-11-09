@@ -53,17 +53,10 @@ class ScriptingAssistantPanel(bpy.types.Panel):
         row.operator("scriptingassistant.toggle_terminal", text="Toggle Terminal")
         row = layout.row()
         row.operator("scriptingassistant.open_addon_preferences", text="Open Add-on Preferences")
-        row = layout.row()
-        row.operator("scriptingassistant.start_debugpy_server", text="Start Debug Server", icon='SCRIPT')
-        row = layout.row()
-        if monitor.active:
-            row.operator("scriptingassistant.monitor_stop", text="Stop Monitoring", icon='PAUSE')
-        else:
-            row.operator("scriptingassistant.monitor_start", text="Start Monitoring", icon='PLAY')
 
 class DebugServerPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
-    bl_label = "Debug Server Settings"
+    bl_label = "Debugging"
     bl_idname = "OBJECT_PT_DebugSubPanel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -100,10 +93,12 @@ class DebugServerPanel(bpy.types.Panel):
         row.prop(context.scene, "debugpy_path") # The addon will try to auto-find the location of debugpy. If no path is found or you would like to use a different path, set it here
         row.prop(context.scene, "debugpy_port") # Port to use. Should match port in VS Code's launch.json
         row.prop(context.scene, "debugpy_timeout") # Timeout in seconds for the attach confirmation listener
+        row = layout.row()
+        row.operator("scriptingassistant.start_debugpy_server", text="Start Debug Server", icon='SCRIPT')
 
 class HotSwapPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
-    bl_label = "Hot Swap Settings"
+    bl_label = "Hot Swap"
     bl_idname = "OBJECT_PT_HotSwapPanel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
@@ -122,3 +117,8 @@ class HotSwapPanel(bpy.types.Panel):
         layout = self.layout
         row = layout.box()
         row.prop(context.scene, "monitor_path")
+        row = layout.row()
+        if monitor.active:
+            row.operator("scriptingassistant.monitor_stop", text="Stop Monitoring", icon='PAUSE')
+        else:
+            row.operator("scriptingassistant.monitor_start", text="Start Monitoring", icon='PLAY')
