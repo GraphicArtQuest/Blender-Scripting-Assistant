@@ -39,7 +39,7 @@ def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bo
     `output_folder`: Absolute folder path to put the .zip archive. This must be a folder that already exists.
 
     `name`: The file name to give the created .zip archive. Should not include the '.zip' file extension as the script
-        will add that on. Must be less than 189 characters to prevent operating system errors while creating the .zip.
+        will add that on. Must be less than 137 characters to prevent operating system errors while creating the .zip.
 
     `overwrite`: If set to `True`, this script overwrites the output .zip archive if it already exists. If `False`, it
         will halt the operation without making any changes.
@@ -111,9 +111,10 @@ def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bo
         message.output_folder_does_not_exist(output_folder)
         return
     
-    # Output file name must be < 190 characters and not contain any invalid operating system file characters.
-    #   I discovered this experimentally. I do not know specifically why 190 is the limit.
-    if len(safe_name) > 189:
+    # Output file name must be < 138 characters and not contain any invalid operating system file characters.
+    #   I discovered this experimentally. I do not know specifically why 138 is the limit, or why it used to work
+    #   with up to 189 characters and now does not.
+    if len(safe_name) > 137:
         message.output_file_name_too_long()
         return
 

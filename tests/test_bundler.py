@@ -160,17 +160,17 @@ class TestBundler(unittest.TestCase):
             self.assertEqual(bundle(test_source_files, test_output_folder, name), bundle_path)
             delete_test_bundle(bundle_path)
     
-    def test_names_longer_than_250_characters_return_none(self):
-        """Prevent causing file system errors by names that are too long."""
+    def test_names_longer_than_137_characters_return_none(self):
+        """Prevent causing file system errors by names that are too long (i.e. >137 characters)."""
         long_name = ""
-        for i in range(0, 189):
+        for i in range(0, 137):
             long_name += "a"
 
         bundle_path = os.path.join(test_output_folder, str(long_name)) + ".zip"
         self.assertEqual(bundle(test_source_files, test_output_folder, long_name), bundle_path)
         delete_test_bundle(bundle_path)
 
-        long_name += "a"    # Now 190 characters long
+        long_name += "a"    # Now 138 characters long and should fail
         bundle_path = os.path.join(test_output_folder, str(long_name)) + ".zip"
         self.assertIsNone(bundle(test_source_files, test_output_folder, long_name), bundle_path)
         delete_test_bundle(bundle_path)
