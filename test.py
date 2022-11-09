@@ -1,4 +1,9 @@
-# import debugpy
+"""
+Runs the unit tests for Blender Scripting Assistant.
+
+The test classes are imported individually, but do not need additional references. Running unittest.main()
+takes care of running all tests.
+"""
 import unittest
 
 from tests.test_directory_monitor import TestDirectoryMonitor
