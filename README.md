@@ -1,66 +1,77 @@
-# Blender Debugger for VS Code (and Visual Studio)
+# Blender Scripting Assistant
 
-Inspired by [Blender-VScode-Debugger](https://github.com/Barbarbarbarian/Blender-VScode-Debugger) which was itself inspired by this [remote_debugger](https://github.com/sybrenstuvel/random-blender-addons/blob/master/remote_debugger.py) for pycharm as explained in this [Blender Developer's Blog post](https://code.blender.org/2015/10/debugging-python-code-with-pycharm/).
+<div align="center">
 
-Since the VS Code one wasn't really well documented and it looked kind of dead, once I figured it out, I was just going to add the documentation, but then I ended up rewriting the whole thing.
+[![An add-on for Blender, at least version 3.3](https://img.shields.io/badge/Blender->3.3-brightgreen?logo=blender&labelColor=white)](https://www.blender.org/)
+[![Licensed under the GPL version 3.0](https://img.shields.io/github/license/GraphicArtQuest/Blender-Scripting-Assistant?color=blue)][license]
 
-Now it can:
 
-- Auto-detect where python is and auto set the path to debugpy if installed.
-- Tell you when the debugger has actually attached.
+[![Maintained](https://img.shields.io/badge/Maintained%3F-Yes-brightgreen.svg)][maintainer]
+[![Contributions welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
 
-![Image Showing VS Code side by side with Blender paused at a breakpoint. In the console, a "Debugger is Attached" Statement is printed.](./Example.png)
+</div>
 
-# How to Use
+# Purpose
 
-I have made a video (click the image below) for those who just started messing with python in Blender or programming in general, but if you're semi-familiar with Python, VS Code, and the command line the following should make sense. If you have any questions or suggestions, don't hesitate to file an issue.
+This Blender add-on provides a suite of tools that makes it easier for developers and artists to easily create other Blender add-ons.
 
-#### NOTES/EDITS
-- This video was done with blender 2.79, but everything still works mostly the same. Only changes are:
-	- Blender changed the default shortcut to the search menu.
-	- **ptvsd has been replaced by debugpy**
-	- Blender now requires you enable `Settings => Interface => Developer Extras` before you can see the commands.
+## Key Features
 
-<p align="center" style="position:relative;">
+- A debugging server to connect Blender to external code editors (such as VS Code)
+- A hot swap system that monitors files and folders for changes and immediately reloads the modified module into Blender
+
+## Long Term Goal
+
+I want to build this project into the defacto tool for Blender add-on developers to use while making and debugging their own scripts and add-ons.
+
+Ultimately, I aim to have this project included as a [community add-on](https://wiki.blender.org/wiki/Process/Addons) bundled with a future Blender release version. 
+
+## History
+
+This add-on is a diverging fork from Alan North's [Blender Debugger for VS Code v2.2.0](https://github.com/AlansCodeLog/blender-debugger-for-vscode). This project expanded beyond Alan's original intent and desire to maintain. I owe many thanks to him for all of his hard work getting the debugging code working after reviewing this [Blender Developer's blog post](https://code.blender.org/2015/10/debugging-python-code-with-pycharm/) about connecting to PyCharm.
+
+<!-- ![Image Showing VS Code side by side with Blender paused at a breakpoint. In the console, a "Debugger is Attached" Statement is printed.](./Example.png) -->
+
+# Getting Started
+
+## Overview
+To use this add-on in your workflow, you require the following installed on your computer:
+
+1. The minimum supported [Blender release](https://www.blender.org/download/lts/) or later
+1. [Python 3.10](https://www.python.org/downloads/) or later, with PIP
+
+Suggested Additions:
+
+1. The external code editor [Visual Studio Code](https://code.visualstudio.com/download)
+1. The [Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) for VS Code
+1. The [`fake-bpy-module`](https://github.com/nutti/fake-bpy-module) package installed by PIP
+
+<!-- I have made a video (click the image below) for those who just started messing with python in Blender or programming in general, but if you're semi-familiar with Python, VS Code, and the command line the following should make sense. If you have any questions or suggestions, don't hesitate to file an issue. -->
+
+<!-- <p align="center" style="position:relative;">
 	<a href="https://www.youtube.com/watch?v=UVDf2VSmRvk" title="Click to go to Video">
 		<img alt="youtube video" src="https://img.youtube.com/vi/UVDf2VSmRvk/maxresdefault.jpg" height="300" style="margin:0 auto;" />
 	</a>
-</p>
+</p> -->
 
-## Note on Downloading
+<!-- ## Note on Downloading
 
 **You must down it with the the green `Clone or Download` button above. DO NOT download it from releases!**
 
-This is because blender has a problem with the periods in the name from the version number. It used to be you could rename the zip, but this no longer works, you'll get an error when you try to enable the addon. The onyl fix is to go where the addon was installed and rename the folder there.
+This is because blender has a problem with the periods in the name from the version number. It used to be you could rename the zip, but this no longer works, you'll get an error when you try to enable the addon. The onyl fix is to go where the addon was installed and rename the folder there. -->
 
 ## Installing Python and Getting Debugpy
 
-Install Python 3 with pip and check add to PATH.<sup id="n1">[1](#f1)</sup>
+Install Python 3 with PIP and check add to PATH.
 
 - If you already have python installed and you can run it from the command line (aka PATH is set), the addon should find it. It checks `where python` or `whereis python` or `which python` to try and determine where python is and uses the first path given<sup id="n2">[2](#f2)</sup>.
 - If you are using something like Conda and want to use a virtual environment, to have the addon auto-detect the path you can: activate the environment, run Blender from the command line, and it should work.
 
-`pip install debugpy`
+	```
+	pip install debugpy
+	```
 
 - For Visual Studio, the debugpy version that works depends on the Visual Studio version. I have never used Visual Studio, but you can find more info on setting everything up here: [Remotely Debugging Python Code on Linux](https://docs.microsoft.com/en-us/visualstudio/python/debugging-python-code-on-remote-linux-machines#connection-troubleshooting). (it is not Linux specific)
-
-## Setting up your Addon
-
-This is the most important part. Otherwise it won't work. I thought it was my VS Code config but no, it was this.
-
-In Blender go to: `User Preferences > File` and set the path to `Scripts` to the folder you're developing your addon in (e.g: "C:\Code\Blender Stuff") BUT the folder must look like this:
-
-```
-Blender Stuff
-└── addons
-	├── your-addon-folder
-		├── __init__.py
-		├── ...etc
-	├── another-addon
-	├── ...
-```
-
-Now remove your addon from Blender if you had installed it manually already, save settings, and when you restart your addon should be installed automatically.
 
 ## Setting up this Addon
 
@@ -68,13 +79,7 @@ Install the addon.
 
 If it did not find the path it'll say "debugpy not found", you'll have to set it manually. It's wherever python is + "\lib\site-packages". NO trailing backslash.
 
-If you want, increase the timeout for the confirmation. It'll print "Waiting..." in the console every second until it prints it's timedout. This does not mean the server has timedout *just* the confirmation listener.
-
-If you're using Blender 2.9+ you must turn on `Developer Extras` (`Preferences => Display => Developer Extras`) if you haven't already, otherwise the addon's commands won't turn up in the search.
-
-Open up Blender's search (default shortcut: F3), type "Debug".
-
-Click `Debug: Start Debug Server for VS Code`.
+If you want, increase the timeout for the confirmation. It'll print "Waiting..." in the console every second until it prints it's timedout. This does not mean the server has timed out *just* the confirmation listener.
 
 Note: you can only start the server once. You cannot stop it, at least from what I understand. If you run it again it'll just tell you it's already running and start the timer again to check for a confirmation.
 
@@ -84,18 +89,18 @@ Open your addon folder (e.g. "C:\Code\Blender Stuff\addons\myaddon").
 
 Install the Python extension for VS Code if you haven't already. For Visual Studio see [Installing Python Support](https://docs.microsoft.com/en-us/visualstudio/python/installing-python-support-in-visual-studio).
 
-In the lower left ([see #3 here](https://code.visualstudio.com/docs/python/python-tutorial#_prerequisites)), VS Code should have auto detected your Python install and set it as the interpreter. For Visual Studio see [Managing Python Environments](https://docs.microsoft.com/en-us/visualstudio/python/managing-python-environments-in-visual-studio).
+In the lower left, [VS Code should have auto detected](https://code.visualstudio.com/docs/python/python-tutorial#_prerequisites) your Python install and set it as the interpreter. For Visual Studio see [Managing Python Environments](https://docs.microsoft.com/en-us/visualstudio/python/managing-python-environments-in-visual-studio).
 
 Go to the Debugging tab and add a configuration. Pick Python. You'll want the configuration that looks like this, no need to change the defaults, you can delete the rest.
 
 ```JSON
-	{
-		"name": "Python: Attach",
-		"type": "python",
-		"request": "attach",
-		"port": 5678, //careful, this used to be 3000 in older versions of vscode and this addon
-		"host": "localhost"
-	},
+{
+	"name": "Python: Attach",
+	"type": "python",
+	"request": "attach",
+	"port": 5678,
+	"host": "localhost"
+}
 ```
 
 Now when you run the debugger with this config in Blender and VS Code the console should print "Debugger is Attached" if it was still waiting (it should still attach even if it wasn't, it just won't tell you).
@@ -104,7 +109,15 @@ Now when you run the debugger with this config in Blender and VS Code the consol
 
 At this point you should be able to add a breakpoint and when you trigger it in Blender, Blender should freeze and VS Code should pause on the breakpoint.
 
-Note though that if you make changes to the file, Blender will not detect them. Have open `User Preferences > Addons` so you can toggle your addon on and off when you make changes. If anyone knows any way to improve this I'd love to know.
+After enabling the add-on, you can control the options by using the new "Scripting Assistant" tab in the viewport's N-panel.
+
+Press `Toggle Terminal` to see the output messages.
+
+Start the debug server by pressing "Start Debug Server".
+
+Start or stop monitoring by pressing "Start/Stop Monitoring".
+
+Adjust the settings for these in the drop down menus.
 
 ## Advanced Usage
 
@@ -165,21 +178,62 @@ Now in Blender the text editor will show this little red button in the top left.
 
 ### Debugging/Editing Scripts
 
-	See [Issue #4](https://github.com/AlansCodeLog/blender-debugger-for-vscode/issues/4) for a workaround.
-	In the future if I have some time, I might see if there's something I can do to make this easier.
+To use breakpoints and debug, you must open the script where Blender installed it to.
+
+    C:\Users\<user name>\AppData\Roaming\Blender Foundation\Blender\<version>\scripts\addons
 
 # Troubleshooting
 
 - Check you installed the correct debugpy version. With VS Code this should no longer be an issue, but I believe different versions of Visual Studio need different versions of debugpy (see [Installing Python Support](https://docs.microsoft.com/en-us/visualstudio/python/installing-python-support-in-visual-studio)).
-- To determine whether the problem is on Blender's side or your editor's: Close Blender and this [test script](https://github.com/AlansCodeLog/blender-debugger-for-vscode/blob/master/test.py), you can copy/download it or run it from the addon folder. Run it with Python `python test.py`, and then try to connect to the server with your editor. If you're still getting problems then the problem is with VS Code, try:
-		- Check your detected your Python install, or set it manually.
-		- For VS Code try reinstalling the VS Code Python extension.
-- If you've been using this addon for a while and it's suddenly giving you a connection error, it might be because the default port has changed. VS Code's Python extension (vscode-python) has changed their default port from 3000 to 5678, so I have changed the default accordingly. I've made it configurable now though, so just check the port the addon is set to matches the one in your `launch.json` in VS Code.
+- To determine whether the problem is on Blender's side or your editor's: Close Blender and the [testdebugpy test script](https://github.com/GraphicArtQuest/Blender-Scripting-Assistant/blob/main/testdebugpy.py).
+
+```bash
+python testdebugpy.py
+```
+
+Then, try to connect to the server with your editor. If you're still getting problems then the problem is with VS Code. Try:
+- Check your detected your Python install, or set it manually.
+- For VS Code try reinstalling the VS Code Python extension.
+- Check that VS Code's Python extension is running on the same port in `launch.json` as the debug server port in Blender.
 
 Otherwise, if none of that helped, don't hesitate to file an issue.
 
-# Notes
+# Support Policy
 
-<a id="f1" href="#n1">1.</a> Technically, the add-on will work with Python 2 as well since it doesn't use Python itself, just the debupy package, so it doesn't really matter whether you installed it with Python 2 or 3 because the package is compatible with both. On the VS Code side though, the Python extension does need to know where Python is (though not debugpy), but it will still connect if it's using Python 2, but your IntelliSense recommendations will be wrong in VS Code.
+This add-on is maintained and supported. Submit a [bug report][bugs] if you encounter errors.
 
-<a id="f2" href="#n2">2.</a> The addon also detects python if PYTHONPATH is set (because Blender will add it to sys.path) or if you used the Python bundled with Blender to install debugpy (but that's a bit of a pain because it doesn't have pip installed, you would have to install it manually).
+## Tested
+
+[![An add-on for Blender, at least version 3.3](https://img.shields.io/badge/Blender->3.3-brightgreen?logo=blender&labelColor=white)](https://www.blender.org/)
+
+![Windows Supported](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge=flat&logo=windows&logoColor=white)
+
+## Help Wanted
+This add-on should work on MacOS and Linux, but help is required to verify. 
+
+![Mac Supported](https://img.shields.io/badge/Mac-000000?style=for-the-badge=flat&logo=apple&logoColor=white)
+![Linux Supported](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge=flat&logo=linux&logoColor=black)
+# License and Development
+
+To help as many fellow artists and developers as possible, **Blender Scripting Assistant** and all other files in this repository are distributed as free and open-source software under the [GPL v3.0 License][license], © 2022.
+
+Both [contributions](CONTRIBUTING.md) and [bug reports][bugs] welcome.
+
+If you find this project useful, please leave a :star2: and subscribe to the Graphic Art Quest YouTube channel for more tutorials and 3D art adventures!
+
+[![Subscribe to the Graphic Art Quest YouTube channel](https://img.shields.io/badge/Subscribe%20to%20Graphic%20Art%20Quest-FF0000?style=plastic&logo=youtube&logoColor=white)][subscribe]
+
+# Contact
+
+Maintained by [M. Scott Lassiter][maintainer].
+
+
+[![GitHub Badge Profile](https://img.shields.io/badge/GitHub-100000?style=plastic&logo=github&logoColor=white)](https://github.com/M-Scott-Lassiter)
+[![Twitter Badge Profile](https://img.shields.io/badge/Twitter-1DA1F2?style=plastic&logo=twitter&logoColor=white)](https://twitter.com/MScottLassiter)
+[![LinkedIn Badge Profile](https://img.shields.io/badge/LinkedIn-0077B5?style=plastic&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/mscottlassiter)
+[![Stackoverflow Badge Profile](https://img.shields.io/badge/stackoverflow-orange.svg?longCache=true&style=plastic&logo=stackoverflow&logoColor=white)](https://stackoverflow.com/users/6186333/sandpiper)
+
+[license]: LICENSE.txt
+[bugs]: https://github.com/GraphicArtQuest/Blender-Scripting-Assistant/issues/new/choose
+[maintainer]: https://graphicartquest.com/author/scott-lassiter/
+[subscribe]: https://www.youtube.com/channel/UCFYKeFMbQnY5CdzFH62PAhg?sub_confirmation=1
