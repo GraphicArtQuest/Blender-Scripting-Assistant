@@ -27,7 +27,7 @@ https://graphicartquest.com/author/scott-lassiter/
 bl_info = {
     'name': "Blender Scripting Assistant",
     'author': "M. Scott Lassiter, Alan North",
-    'version': (1, 0, 0),
+    'version': (1, 0, 1),
     'blender': (3, 3, 0), # Debugpy doesn't seem to work on previous versions. Unable to import it...
     'description': "A comprehensive set of scripting and debugging tools for creating Blender add-ons.",
     'location': "View 3D > Sidebar > Scripting Assistant Tab",
