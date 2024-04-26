@@ -8,6 +8,7 @@ import unittest
 
 from tests.test_directory_monitor import TestDirectoryMonitor
 from tests.test_bundler import TestBundler
+from tests.test_hot_swap import TestHotSwap
 
 if __name__ == '__main__':
     unittest.main()
