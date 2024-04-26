@@ -111,10 +111,13 @@ def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bo
         message.output_folder_does_not_exist(output_folder)
         return
     
-    # Output file name must be < 138 characters and not contain any invalid operating system file characters.
-    #   I discovered this experimentally. I do not know specifically why 138 is the limit, or why it used to work
-    #   with up to 189 characters and now does not.
-    if len(safe_name) > 137:
+    # Output file name must be <= 120 characters and not contain any invalid operating system file characters.
+    #   I discovered this experimentally. The limit was originally 138, but then the tests started to fail inexplicably.
+    #   The new limit appears to be around 135. Rather than try to spend more effort trying to track down why 138 was
+    #   the limit, or why it changed, was not worth my time. Therefore, I just bumped the limit down to 120 characters
+    #   to be safe, verify the tests and the bundler work, and left the limit at that. It should be enough characters
+    #   to not cause any routine problems.
+    if len(safe_name) > 120:
         message.output_file_name_too_long()
         return
 
