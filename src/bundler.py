@@ -39,7 +39,7 @@ def bundle(source_files: list[str], output_folder: str, name: str, overwrite: bo
     `output_folder`: Absolute folder path to put the .zip archive. This must be a folder that already exists.
 
     `name`: The file name to give the created .zip archive. Should not include the '.zip' file extension as the script
-        will add that on. Must be less than 137 characters to prevent operating system errors while creating the .zip.
+        will add that on. Must be less than 120 characters to prevent operating system errors while creating the .zip.
 
     `overwrite`: If set to `True`, this script overwrites the output .zip archive if it already exists. If `False`, it
         will halt the operation without making any changes.
