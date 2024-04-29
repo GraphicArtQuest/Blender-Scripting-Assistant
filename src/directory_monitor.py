@@ -61,7 +61,7 @@ class DirectoryMonitor(object):
     def set_directory(self, desired_directory: str):
         # May be a file or folder, but it has to exist
         if os.path.exists(str(desired_directory)):
-            self._directory = str(desired_directory)
+            self._directory = str(desired_directory).strip('\\')
             self._last_tracked_filecount = self._num_files(self._directory)
             message.changed_directory(self._directory)
         else:
