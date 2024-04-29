@@ -39,3 +39,9 @@ class DebuggerPreferences(bpy.types.AddonPreferences):
         subtype='FILE_PATH',
         default= "Blender Scripting Assistant"
     )
+
+    monitor_addon_filename: bpy.props.StringProperty(
+        name="File Name of Monitored Add-on",
+        default= "blender-scripting-assistant",
+        subtype='FILE_PATH',
+    )

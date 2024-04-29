@@ -107,7 +107,7 @@ class HotSwapPanel(bpy.types.Panel):
     bl_options = {'DEFAULT_CLOSED'}
     
     bpy.types.Scene.monitor_path = bpy.props.StringProperty(
-        name="File/Folder to Debug:",
+        name="Add-on File Path",
         subtype='FILE_PATH',
         get=get_monitor_path_value,
         set=set_monitor_path_value
