@@ -1,4 +1,9 @@
-# Import Code
+"""
+Directory Monitor
+
+Watches a specified file or folder for changes. Will run subscribed scripts if changes detected.
+"""
+
 from collections import defaultdict
 import os
 import threading
@@ -14,6 +19,8 @@ class DirectoryMonitor(object):
     instabilities."""
 
     def __init__(self):
+        """The class uses properties for data validation. Accessing the private self._ values directly could cause
+            instabilities."""
         self._polling_delay = .15       # Seconds
         self._directory = ""            # Can be a file or folder
         self._last_tracked_update = 0   # Comparison for file modified times
@@ -31,7 +38,7 @@ class DirectoryMonitor(object):
     def get_polling_delay(self):
         return self._polling_delay
     
-    def set_polling_delay(self, new_delay):
+    def set_polling_delay(self, new_delay: float):
         try:
             check_polling_delay = float(new_delay)
             
@@ -51,7 +58,7 @@ class DirectoryMonitor(object):
     def get_directory(self):
         return self._directory
 
-    def set_directory(self, desired_directory):
+    def set_directory(self, desired_directory: str):
         # May be a file or folder, but it has to exist
         if os.path.exists(str(desired_directory)):
             self._directory = str(desired_directory)
@@ -64,21 +71,24 @@ class DirectoryMonitor(object):
     active = property(get_active)   # Read only. Turn on with 'watch()'
     directory = property(get_directory, set_directory)
 
-    def subscribe(self, script, script_function):
-        # When another class subscribes to the monitor, any time monitor detects a change it will
-        #   run all of the subscribed callback functions that were registered.
+    def subscribe(self, script: str, script_function) -> None:
+        """ When another class subscribes to the monitor, any time monitor detects a change it will
+        run all of the subscribed callback functions that were registered.
+
+        @returns: a list of strings representing the header columns
+        """
         self._subscribers[script].append(script_function)
     
-    def unsubscribe(self, script):
+    def unsubscribe(self, script: str) -> None:
         try:
             del self._subscribers[script]
         except:
             message.unable_to_unsubscribe(script)
 
-    def clear_subscribers(self):
+    def clear_subscribers(self) -> None:
         self._subscribers.clear()
 
-    def run_scripts(self):
+    def run_scripts(self) -> None:
         # Run all of the callback functions that have subscribed
         for script in self._subscribers.keys():
             for func in self._subscribers[script]:
@@ -150,7 +160,8 @@ class DirectoryMonitor(object):
         if self._last_tracked_update > 0:   # Break out of infinite loop if the poll request was cancelled
             self._poll_timer.start()
     
-    def watch(self):
+    def watch(self) -> None:
+        """Begin watching the specified directory for changes. Will secure if the directory is invalid."""
         if not os.path.exists(str(self.directory)):
             message.invalid_directory(self._directory)
             self.secure()
@@ -166,7 +177,7 @@ class DirectoryMonitor(object):
         if monitor.active:
             message.watch() # Let the user know that there wasn't another error along the way that disabled the monitor
     
-    def secure(self):
+    def secure(self) -> None:
         self._poll_timer.cancel()
         self._last_tracked_update = 0
         message.secure()

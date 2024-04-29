@@ -5,6 +5,8 @@ import bpy
 from .debug_server import check_for_debugpy
 
 class DebuggerPreferences(bpy.types.AddonPreferences):
+    """This class holds all debugger preferences for the add-on."""
+    
     bl_idname = __package__
 
     debugpy_path: bpy.props.StringProperty(
