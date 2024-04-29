@@ -46,20 +46,6 @@ Suggested Additions:
 1. The [Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) for VS Code
 1. The [`fake-bpy-module`](https://github.com/nutti/fake-bpy-module) package installed by PIP
 
-<!-- I have made a video (click the image below) for those who just started messing with python in Blender or programming in general, but if you're semi-familiar with Python, VS Code, and the command line the following should make sense. If you have any questions or suggestions, don't hesitate to file an issue. -->
-
-<!-- <p align="center" style="position:relative;">
-	<a href="https://www.youtube.com/watch?v=UVDf2VSmRvk" title="Click to go to Video">
-		<img alt="youtube video" src="https://img.youtube.com/vi/UVDf2VSmRvk/maxresdefault.jpg" height="300" style="margin:0 auto;" />
-	</a>
-</p> -->
-
-<!-- ## Note on Downloading
-
-**You must down it with the the green `Clone or Download` button above. DO NOT download it from releases!**
-
-This is because blender has a problem with the periods in the name from the version number. It used to be you could rename the zip, but this no longer works, you'll get an error when you try to enable the addon. The onyl fix is to go where the addon was installed and rename the folder there. -->
-
 ## Installing Python and Getting Debugpy
 
 Install Python 3 with PIP and check add to PATH.
@@ -75,9 +61,19 @@ Install Python 3 with PIP and check add to PATH.
 
 ## Setting up this Addon
 
-Install the addon.
+Install the addon by downloading the [latest release][release].
 
-If it did not find the path it'll say "debugpy not found", you'll have to set it manually. It's wherever python is + "\lib\site-packages". NO trailing backslash.
+Then, open the Blender Preferences (Edit -> Preferences, or hotkey `CTRL` + `,`). Navigate to the Add-ons tab, and click the "Install..." button.
+
+![Location of the Install button on the Blender Preferences Add-ons tab](./images/Blender%20Preferences%20-%20Install.JPG)
+
+Navigate to the location you saved the released .zip file in. Then, click the "Install Add-on" button.
+
+![Location of the Install Add-on button in the Blender File View window](./images/Blender%20File%20View%20-%20Install%20Add-on.JPG)
+
+## Configuring the Scripting Assistant Addon
+
+After installing, if it did not find the path it will say "debugpy not found". You will have to set this path manually. It's wherever Python is + "\lib\site-packages". NO trailing backslash.
 
 If you want, increase the timeout for the confirmation. It'll print "Waiting..." in the console every second until it prints it's timedout. This does not mean the server has timed out *just* the confirmation listener.
 
@@ -107,7 +103,7 @@ Now when you run the debugger with this config in Blender and VS Code the consol
 
 ## How to Use
 
-At this point you should be able to add a breakpoint and when you trigger it in Blender, Blender should freeze and VS Code should pause on the breakpoint.
+At this point you should be able to [add a breakpoint](#debuggingediting-source-code) and when you trigger it in Blender, Blender should freeze and VS Code should pause on the breakpoint.
 
 After enabling the add-on, you can control the options by using the new "Scripting Assistant" tab in the viewport's N-panel.
 
@@ -204,7 +200,7 @@ This add-on is maintained and supported. Submit a [bug report][bugs] if you enco
 
 ## Tested
 
-[![An add-on for Blender, at least version 3.3](https://img.shields.io/badge/Blender->3.3-brightgreen?logo=blender&labelColor=white)](https://www.blender.org/)
+[![An add-on for Blender, at least version 4.0](https://img.shields.io/badge/Blender-3.3_thru_4.0-brightgreen?logo=blender&labelColor=white)](https://www.blender.org/)
 
 ![Windows Supported](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge=flat&logo=windows&logoColor=white)
 
@@ -235,5 +231,6 @@ Maintained by [M. Scott Lassiter][maintainer].
 
 [license]: LICENSE.txt
 [bugs]: https://github.com/GraphicArtQuest/Blender-Scripting-Assistant/issues/new/choose
+[release]: https://github.com/GraphicArtQuest/Blender-Scripting-Assistant/releases/latest
 [maintainer]: https://graphicartquest.com/author/scott-lassiter/
 [subscribe]: https://www.youtube.com/channel/UCFYKeFMbQnY5CdzFH62PAhg?sub_confirmation=1
