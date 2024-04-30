@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![An add-on for Blender, at least version 3.3](https://img.shields.io/badge/Blender->3.3-brightgreen?logo=blender&labelColor=white)](https://www.blender.org/)
+[![An add-on for Blender, at least version 3.3](https://img.shields.io/badge/Blender-3.3_thru_4.0-brightgreen?logo=blender&labelColor=white)](https://www.blender.org/)
 [![Licensed under the GPL version 3.0](https://img.shields.io/github/license/GraphicArtQuest/Blender-Scripting-Assistant?color=blue)][license]
 
 
@@ -209,6 +209,9 @@ This add-on should work on MacOS and Linux, but help is required to verify.
 
 ![Mac Supported](https://img.shields.io/badge/Mac-000000?style=for-the-badge=flat&logo=apple&logoColor=white)
 ![Linux Supported](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge=flat&logo=linux&logoColor=black)
+
+Needs verification on Blender 4.1.
+
 # License and Development
 
 To help as many fellow artists and developers as possible, **Blender Scripting Assistant** and all other files in this repository are distributed as free and open-source software under the [GPL v3.0 License][license], © 2022.
