@@ -28,6 +28,7 @@ def create_addon_name(addon_path: str) -> str:
 
     sys.path.append(addon_directory)
 
+    given_name = ''
     try:
         # Using the `__import__` function here will successfully work for `.py` files or for folders that have an
         #   `__init__.py` file, in which case it imports as module.

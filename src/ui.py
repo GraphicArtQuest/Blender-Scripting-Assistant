@@ -35,8 +35,8 @@ def get_monitor_path_value(self):
 
 def set_monitor_path_value(self, value):
     monitor.directory = value
-    if monitor.directory == value:
-        bpy.context.preferences.addons[__package__].preferences.monitor_path = value
+    if monitor.directory == value.strip('\\'):
+        bpy.context.preferences.addons[__package__].preferences.monitor_path = value.strip('\\')
 
 
 class ScriptingAssistantPanel(bpy.types.Panel):
