@@ -50,6 +50,7 @@ from .operators.debug_server_start import DebugServerStart
 from .operators.monitor_start import MonitorStart
 from .operators.monitor_stop import MonitorStop
 from .operators.open_addon_preferences import OpenAddonPreferences
+from .operators.open_blender_addon_directory import OpenAddonDirectory
 from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 
 debugger_classes = (
@@ -64,6 +65,7 @@ debugger_classes = (
     MonitorStart,
     MonitorStop,
     OpenAddonPreferences,
+    OpenAddonDirectory,
     ToggleBlenderTerminal,
 
     # Preferences

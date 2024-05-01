@@ -53,6 +53,8 @@ class ScriptingAssistantPanel(bpy.types.Panel):
         row.operator("scriptingassistant.toggle_terminal", text="Toggle Terminal")
         row = layout.row()
         row.operator("scriptingassistant.open_addon_preferences", text="Open Add-on Preferences")
+        row = layout.row()
+        row.operator("scriptingassistant.open_addon_directory", text="Open Blender Add-on Directory")
 
 class DebugServerPanel(bpy.types.Panel):
     """This is a sub menu within the N panel that contains the configuration settings for the Debugpy server"""
