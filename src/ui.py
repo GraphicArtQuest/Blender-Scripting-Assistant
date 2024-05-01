@@ -107,14 +107,14 @@ class HotSwapPanel(bpy.types.Panel):
     bl_category = 'Scripting Assistant'
     bl_parent_id = "OBJECT_PT_ScriptingAssistantPanel"
     bl_options = {'DEFAULT_CLOSED'}
-    
+
     bpy.types.Scene.monitor_path = bpy.props.StringProperty(
         name="Add-on File Path",
         subtype='FILE_PATH',
         get=get_monitor_path_value,
         set=set_monitor_path_value
     )
-    
+
     def draw(self, context):
         layout = self.layout
         row = layout.box()
@@ -124,3 +124,5 @@ class HotSwapPanel(bpy.types.Panel):
             row.operator("scriptingassistant.monitor_stop", text="Stop Monitoring", icon='PAUSE')
         else:
             row.operator("scriptingassistant.monitor_start", text="Start Monitoring", icon='PLAY')
+        row = layout.row()
+        row.operator("scriptingassistant.open_monitor_source_directory", text="Open Source Directory")

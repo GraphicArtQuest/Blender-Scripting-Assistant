@@ -51,6 +51,7 @@ from .operators.monitor_start import MonitorStart
 from .operators.monitor_stop import MonitorStop
 from .operators.open_addon_preferences import OpenAddonPreferences
 from .operators.open_blender_addon_directory import OpenAddonDirectory
+from .operators.open_monitor_source_directory import OpenMonitoredSourceDirectory
 from .operators.toggle_blender_terminal import ToggleBlenderTerminal
 
 debugger_classes = (
@@ -66,6 +67,7 @@ debugger_classes = (
     MonitorStop,
     OpenAddonPreferences,
     OpenAddonDirectory,
+    OpenMonitoredSourceDirectory,
     ToggleBlenderTerminal,
 
     # Preferences
