@@ -8,7 +8,8 @@ import unittest
 
 from tests.test_directory_monitor import TestDirectoryMonitor
 from tests.test_bundler import TestBundler
-from tests.test_hot_swap import TestHotSwap
+from tests.test_hot_swap import TestHotSwap_create_addon_name
+from tests.test_hot_swap import TestHotSwap_get_most_recent_bl_name_info
 
 if __name__ == '__main__':
     unittest.main()

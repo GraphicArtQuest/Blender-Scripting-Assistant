@@ -7,7 +7,7 @@ import os
 import shutil
 import unittest
 
-from src.hot_swap import create_addon_name
+from src.hot_swap import create_addon_name, get_most_recent_bl_name_info
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -18,56 +18,64 @@ def delete_test_file(path):
     if os.path.exists(path):
         os.remove(path)
 
-class TestHotSwap(unittest.TestCase):
+class TestHotSwap_create_addon_name(unittest.TestCase):
 
     ###############################################################
     # Valid Blender Add-ons - Single Files
     ###############################################################
-    def test_valid_single_file_returns_addon_name_no_spaces(self):
-        """A single Python file with no spaces in the name and a `bl_info` object returns the correct name."""
-        
-        filepath = os.path.join(testfile_path, "valid_single_file.py")
-        # Delete if already exists, and create the test file
-        delete_test_file(filepath)
-        testfile = open(filepath, "w")
-        testfile.write("bl_info = {\n")
-        testfile.write("    'name': 'TestFile'\n")
-        testfile.write("}")
-        testfile.close()
-
-        # Get name and run test
-        name = create_addon_name(filepath)
-        self.assertEqual(name, 'testfile')
-
-        # Cleanup
-        delete_test_file(filepath)
-        
     def test_valid_single_file_returns_addon_name_with_spaces(self):
-        """A single Python file with spaces in the name and a `bl_info` object returns the correct name with dashes."""
+        """The given name string should return the correct same value in lower case and with spaces replaced by
+            dashes. Trailing and leading spaces should get cut off.
+        """
         
-        filepath = os.path.join(testfile_path, "valid_single_file_with_spaces.py")
+        self.assertEqual(create_addon_name('testfilealllowercase'), 'testfilealllowercase')
+        self.assertEqual(create_addon_name('TestModuleNameNoSpaces'), 'testmodulenamenospaces')
+        self.assertEqual(create_addon_name('Test File With Spaces'), 'test-file-with-spaces')
+        self.assertEqual(create_addon_name('test-module-name-with-dashes'), 'test-module-name-with-dashes')
+        self.assertEqual(create_addon_name('test_module_name_with_underscores'), 'test_module_name_with_underscores')
+        self.assertEqual(create_addon_name(
+            'test-module-name-with-trailing-space     '), 
+            'test-module-name-with-trailing-space')
+        self.assertEqual(create_addon_name(
+            '     test-module-name-with-leading-space'), 
+            'test-module-name-with-leading-space')
+        self.assertEqual(create_addon_name(
+            'Test module with       MIDDLE extra spaces'), 
+            'test-module-with-------middle-extra-spaces')
+        self.assertEqual(create_addon_name(''), '')
+        self.assertEqual(create_addon_name('    '), '')
+
+class TestHotSwap_get_most_recent_bl_name_info(unittest.TestCase):
+
+    ###############################################################
+    # Valid Blender Add-ons - Single Files
+    ###############################################################
+    def test_valid_single_file_returns_bl_name(self):
+        """A single Python file add-on with a `bl_info` object returns the given name."""
+        
+        filepath = os.path.join(testfile_path, "valid_single_bl_info_file.py")
         # Delete if already exists, and create the test file
         delete_test_file(filepath)
         testfile = open(filepath, "w")
         testfile.write("bl_info = {\n")
-        testfile.write("    'name': 'Test File With Spaces'\n")
+        testfile.write("    'name': 'Test File Name'\n")
         testfile.write("}")
         testfile.close()
 
         # Get name and run test
-        name = create_addon_name(filepath)
-        self.assertEqual(name, 'test-file-with-spaces')
+        name = get_most_recent_bl_name_info(filepath)
+        self.assertEqual(name, 'Test File Name')
 
         # Cleanup
         delete_test_file(filepath)
-
+        
     ###############################################################
     # Valid Blender Add-ons - Modules
     ###############################################################
-    def test_valid_folder_returns_addon_name_no_spaces(self):
-        """A folder containing a Python module with no spaces in the `bl_info.name` object returns correct name."""
+    def test_valid_folder_returns_bl_name(self):
+        """A folder containing a Python module with a `bl_info` object returns the given name."""
         
-        modulepath = os.path.join(testfile_path, "valid_module_no_spaces")
+        modulepath = os.path.join(testfile_path, "valid_module_bl_info_file")
         # Delete if already exists, and create the test module path
         shutil.rmtree(modulepath, ignore_errors=True)
         os.mkdir(modulepath)
@@ -76,36 +84,13 @@ class TestHotSwap(unittest.TestCase):
         module_init_file = os.path.join(modulepath, "__init__.py")
         testfile = open(module_init_file, "w")
         testfile.write("bl_info = {\n")
-        testfile.write("    'name': 'TestModuleNameNoSpaces'\n")
+        testfile.write("    'name': 'Test Module Name'\n")
         testfile.write("}")
         testfile.close()
 
         # Get name and run test
-        name = create_addon_name(modulepath)
-        self.assertEqual(name, 'testmodulenamenospaces')
-
-        # Cleanup
-        shutil.rmtree(modulepath, ignore_errors=True)
-
-    def test_valid_folder_returns_addon_name_with_spaces(self):
-        """A folder containing a Python module with spaces in the `bl_info.name` object returns correct name."""
-        
-        modulepath = os.path.join(testfile_path, "valid_module_with_spaces")
-        # Delete if already exists, and create the test module path
-        shutil.rmtree(modulepath, ignore_errors=True)
-        os.mkdir(modulepath)
-
-        # Create the __init__.py file
-        module_init_file = os.path.join(modulepath, "__init__.py")
-        testfile = open(module_init_file, "w")
-        testfile.write("bl_info = {\n")
-        testfile.write("    'name': 'Test Module Name With Spaces'\n")
-        testfile.write("}")
-        testfile.close()
-
-        # Get name and run test
-        name = create_addon_name(modulepath)
-        self.assertEqual(name, 'test-module-name-with-spaces')
+        name = get_most_recent_bl_name_info(modulepath)
+        self.assertEqual(name, 'Test Module Name')
 
         # Cleanup
         shutil.rmtree(modulepath, ignore_errors=True)
@@ -113,10 +98,10 @@ class TestHotSwap(unittest.TestCase):
     ###############################################################
     # Invalid Blender Add-ons - Single Files
     ###############################################################
-    def test_invalid_single_file_returns_empty_string_when_no_bl_info(self):
+    def test_invalid_single_file_returns_empty_string_when_no_bl_info_on_refresh(self):
         """A single Python file MUST have the `bl_info` object to be a valid Blender add-on. If not there, reject it."""
         
-        filepath = os.path.join(testfile_path, "invalid_single_file_missing_bl_info.py")
+        filepath = os.path.join(testfile_path, "invalid_single_file_missing_bl_info_on_refresh.py")
         # Delete if already exists, and create the test file
         delete_test_file(filepath)
         testfile = open(filepath, "w")
@@ -124,16 +109,16 @@ class TestHotSwap(unittest.TestCase):
         testfile.close()
 
         # Get name and run test
-        name = create_addon_name(filepath)
+        name = get_most_recent_bl_name_info(filepath)
         self.assertEqual(name, '')
 
         # Cleanup
         delete_test_file(filepath)
 
-    def test_invalid_single_file_returns_empty_string_when_bl_info_missing_name(self):
+    def test_invalid_single_file_returns_empty_string_when_bl_info_missing_name_on_refresh(self):
         """If the `bl_info` object is there but missing a name field, reject it."""
         
-        filepath = os.path.join(testfile_path, "invalid_single_file_missing_bl_info_name.py")
+        filepath = os.path.join(testfile_path, "invalid_single_file_missing_bl_info_name_on_refresh.py")
         # Delete if already exists, and create the test file
         delete_test_file(filepath)
         testfile = open(filepath, "w")
@@ -143,58 +128,30 @@ class TestHotSwap(unittest.TestCase):
         testfile.close()
 
         # Get name and run test
-        name = create_addon_name(filepath)
+        name = get_most_recent_bl_name_info(filepath)
         self.assertEqual(name, '')
 
         # Cleanup
         delete_test_file(filepath)
 
-    def test_invalid_single_file_returns_empty_string_when_bl_info_name_empty(self):
-        """If the `bl_info` object but the name field is empty, reject it."""
+    def test_invalid_single_file_returns_empty_string_when_file_does_not_exist_on_refresh(self):
+        """If a file doesn't exist, return an empty string."""
         
-        filepath = os.path.join(testfile_path, "invalid_single_file_missing_bl_info_name_empty.py")
-        # Delete if already exists, and create the test file
+        filepath = os.path.join(testfile_path, "filepath_that_doesn't_exist_for_refresh")
         delete_test_file(filepath)
-        testfile = open(filepath, "w")
-        testfile.write("bl_info = {\n")
-        testfile.write("    'name': ''\n")  # Intentionally included, but left blank
-        testfile.write("}")
-        testfile.close()
+        # No file actually created
 
         # Get name and run test
-        name = create_addon_name(filepath)
+        name = get_most_recent_bl_name_info(filepath)
         self.assertEqual(name, '')
 
-        # Cleanup
-        delete_test_file(filepath)
-
-
-    def test_invalid_single_file_returns_empty_string_when_bl_info_name_only_spaces(self):
-        """If the `bl_info` object but the name field is only spaces, reject it."""
-        
-        filepath = os.path.join(testfile_path, "invalid_single_file_missing_bl_info_name_only_spaces.py")
-        # Delete if already exists, and create the test file
-        delete_test_file(filepath)
-        testfile = open(filepath, "w")
-        testfile.write("bl_info = {\n")
-        testfile.write("    'name': '    '\n")  # A bunch of spaces with no actual characters
-        testfile.write("}")
-        testfile.close()
-
-        # Get name and run test
-        name = create_addon_name(filepath)
-        self.assertEqual(name, '')
-
-        # Cleanup
-        delete_test_file(filepath)
-        
     ###############################################################
     # Invalid Blender Add-ons - Modules
     ###############################################################
-    def test_invalid_folder_returns_empty_string_when_no_init_file(self):
-        """A folder containing a Python module with spaces in the `bl_info.name` object returns correct name."""
+    def test_invalid_folder_returns_empty_string_when_no_init_file_on_refresh(self):
+        """A package containing a Python module with no or improper init file returns correct name."""
         
-        modulepath = os.path.join(testfile_path, "invalid_module_with_no_init")
+        modulepath = os.path.join(testfile_path, "invalid_module_with_no_init_on_refresh")
         # Delete if already exists, and create the test module path
         shutil.rmtree(modulepath, ignore_errors=True)
         os.mkdir(modulepath)
@@ -208,17 +165,17 @@ class TestHotSwap(unittest.TestCase):
         testfile.close()
 
         # Get name and run test
-        name = create_addon_name(modulepath)
+        name = get_most_recent_bl_name_info(modulepath)
         self.assertEqual(name, '')
 
         # Cleanup
         shutil.rmtree(modulepath, ignore_errors=True)
 
-    def test_invalid_folder_returns_empty_string_when_no_bl_info(self):
+    def test_invalid_folder_returns_empty_string_when_no_bl_info_on_refresh(self):
         """A folder containing a Python module MUST have the `bl_info` object to be a valid Blender add-on.
         If not there, reject it.."""
         
-        modulepath = os.path.join(testfile_path, "invalid_module_with_no_bl_info")
+        modulepath = os.path.join(testfile_path, "invalid_module_with_no_bl_info_on_refresh")
         # Delete if already exists, and create the test module path
         shutil.rmtree(modulepath, ignore_errors=True)
         os.mkdir(modulepath)
@@ -230,17 +187,17 @@ class TestHotSwap(unittest.TestCase):
         testfile.close()
 
         # Get name and run test
-        name = create_addon_name(modulepath)
+        name = get_most_recent_bl_name_info(modulepath)
         self.assertEqual(name, '')
 
         # Cleanup
         shutil.rmtree(modulepath, ignore_errors=True)
 
-    def test_invalid_folder_returns_empty_string_when_bl_info_missing_name(self):
+    def test_invalid_folder_returns_empty_string_when_bl_info_missing_name_on_refresh(self):
         """A folder containing a Python module MUST have the `bl_info` object with a name field.
         If not there, reject it.."""
         
-        modulepath = os.path.join(testfile_path, "invalid_module_with_bl_info_missing_name")
+        modulepath = os.path.join(testfile_path, "invalid_module_with_bl_info_missing_name_on_refresh")
         # Delete if already exists, and create the test module path
         shutil.rmtree(modulepath, ignore_errors=True)
         os.mkdir(modulepath)
@@ -254,60 +211,22 @@ class TestHotSwap(unittest.TestCase):
         testfile.close()
 
         # Get name and run test
-        name = create_addon_name(modulepath)
+        name = get_most_recent_bl_name_info(modulepath)
         self.assertEqual(name, '')
 
         # Cleanup
         shutil.rmtree(modulepath, ignore_errors=True)
-
-    def test_invalid_folder_returns_empty_string_when_bl_info_name_empty(self):
-        """A folder containing a Python module MUST have the `bl_info` object with a name field.
-        If it is there but blank, reject it.."""
         
-        modulepath = os.path.join(testfile_path, "invalid_module_with_bl_info_name_empty")
-        # Delete if already exists, and create the test module path
+    def test_invalid_folder_returns_empty_string_when_folder_does_not_exist_on_refresh(self):
+        """If a file doesn't exist, return an empty string."""
+        
+        modulepath = os.path.join(testfile_path, "module_that_doesn't_exist_for_refresh")
         shutil.rmtree(modulepath, ignore_errors=True)
-        os.mkdir(modulepath)
-
-        # Create the __init__.py file
-        module_init_file = os.path.join(modulepath, "__init__.py")
-        testfile = open(module_init_file, "w")
-        testfile.write("bl_info = {\n")
-        testfile.write("    'name': ''\n")  # Intentionally included, but left blank
-        testfile.write("}")
-        testfile.close()
+        # No module actually created
 
         # Get name and run test
-        name = create_addon_name(modulepath)
+        name = get_most_recent_bl_name_info(modulepath)
         self.assertEqual(name, '')
-
-        # Cleanup
-        shutil.rmtree(modulepath, ignore_errors=True)
-
-    def test_invalid_folder_returns_empty_string_when_bl_info_name_only_spaces(self):
-        """A folder containing a Python module MUST have the `bl_info` object with a name field.
-        If it is only spaces, reject it.."""
-        
-        modulepath = os.path.join(testfile_path, "invalid_module_with_bl_info_name_only_spaces")
-        # Delete if already exists, and create the test module path
-        shutil.rmtree(modulepath, ignore_errors=True)
-        os.mkdir(modulepath)
-
-        # Create the __init__.py file
-        module_init_file = os.path.join(modulepath, "__init__.py")
-        testfile = open(module_init_file, "w")
-        testfile.write("bl_info = {\n")
-        testfile.write("    'name': '    '\n")  # Intentionally included, but left blank
-        testfile.write("}")
-        testfile.close()
-
-        # Get name and run test
-        name = create_addon_name(modulepath)
-        self.assertEqual(name, '')
-
-        # Cleanup
-        shutil.rmtree(modulepath, ignore_errors=True)
 
 if __name__ == '__main__':
     unittest.main()
-    
